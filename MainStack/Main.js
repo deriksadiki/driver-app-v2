@@ -16,6 +16,7 @@ const MainStack = () =>{
         ...TransitionPresets.SlideFromRightIOS }}>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="History" component={History} />
+        
     </Stack.Navigator>
     )
 }
