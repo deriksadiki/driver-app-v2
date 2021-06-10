@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, StatusBar, Image, Switch} from 'react-native';
+import { View, Text, TouchableOpacity, StatusBar, Image, Switch, ScrollView} from 'react-native';
 import Style from '../Style/Style';
 import Box from '../Images/box.png';
 
@@ -9,7 +9,8 @@ export default class Home extends React.Component{
     super()
     this.state = {
       isEnabled : false,
-      text: 'Offline'
+      text: 'Offline',
+      test : [0, 1, 2, 3, 4,5, 6,7,8,9,19,3,3,3,3]
     }
   }
 
@@ -22,6 +23,19 @@ export default class Home extends React.Component{
   }
 
   render(){
+    const requests = this.state.test.map((val, indx) =>{
+      return(
+        <TouchableOpacity style={Style.card} key={indx}>
+                  <View style={Style.cardContent}>
+                    <Image style={Style.boxImg} source={Box} />
+                  </View>
+                  <View style={Style.cardContent2}>
+                    <Text style={Style.nameTXT}>6654FGTH</Text>
+                    <Text style={Style.detailsTXT}>5km</Text>
+                  </View>
+              </TouchableOpacity>
+      )
+    })
     return(
         <View style={Style.body}>
             <StatusBar backgroundColor="black" />
@@ -39,7 +53,7 @@ export default class Home extends React.Component{
                         thumbColor={this.state.isEnabled ? "#f5dd4b" : "#f4f3f4"}
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={()=>{this.changeStatus()}} 
-                        value={this.state.isEnabled}
+                        value={this.state.isEnabled}  
                       />
                       <View style={Style.statusText}>
                           <Text style={Style.detailsTXT}>{this.state.text}</Text>
@@ -49,18 +63,13 @@ export default class Home extends React.Component{
             </View>
             <View style={Style.heading}>
               <Text style={Style.nameTXT}>Requests</Text>
+              <Text></Text>
             </View>
 
             <View>
-                <View style={Style.card}>
-                    <View style={Style.cardContent}>
-                      <Image style={Style.boxImg} source={Box} />
-                    </View>
-                    <View style={Style.cardContent2}>
-                      <Text style={Style.nameTXT}>6654FGTH</Text>
-                      <Text style={Style.detailsTXT}>5km</Text>
-                    </View>
-                </View>
+              <ScrollView style={{marginBottom: 120}}>
+              {requests}
+              </ScrollView>
             </View>
         </View>
     )

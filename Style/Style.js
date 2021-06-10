@@ -86,6 +86,67 @@ export default styles =  StyleSheet.create({
     heading:{
         marginTop : height * 0.025,
         marginLeft : width * 0.05,
-    }
+    },
 
+    pinBody : {
+        position: 'absolute',
+        bottom: 15,
+        width: width * 0.86,
+        height : height * 0.18,
+        backgroundColor: '#FFFFFF',
+        marginLeft : width * 0.07,
+        borderTopLeftRadius: 20,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+        borderTopRightRadius: 20, 
+        alignItems: 'center'
+    }, 
+
+    pinMainBody:{
+        marginTop: height * 0.3,
+        alignItems: 'center',
+        width: width * 0.8,
+        alignSelf: 'center'
+    },
+
+    addPackstext :{
+        marginTop: height * 0.02,
+        width: width * 0.9,
+        marginLeft : width * 0.05,
+    },
+
+    circle : {
+        backgroundColor: '#dbdbdb',
+        height : 40,
+        width: 40,
+        borderRadius: 40/2
+    },
+    
+    packsBody : {
+        height: height * 0.9
+    },
+
+    packsTxt : {
+        marginLeft : width * 0.05,
+        marginTop: height * 0.01
+    },
+    btn :{
+        width : width * 0.6,
+        backgroundColor: '#ffe200',
+        borderTopLeftRadius: 20,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+        borderTopRightRadius: 20, 
+        height : height * 0.07,
+        textAlign: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: width * 0.2
+    },
+
+    bottomBtn : {
+        position: 'absolute',
+        bottom: 10,
+    }
 })
