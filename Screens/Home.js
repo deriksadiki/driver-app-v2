@@ -22,10 +22,14 @@ export default class Home extends React.Component{
     }
   }
 
+  selectReq(){
+    this.props.navigation.navigate('verify');
+  }
+
   render(){
     const requests = this.state.test.map((val, indx) =>{
       return(
-        <TouchableOpacity style={Style.card} key={indx}>
+        <TouchableOpacity style={Style.card} key={indx} onPress={()=>{this.selectReq()}}>
                   <View style={Style.cardContent}>
                     <Image style={Style.boxImg} source={Box} />
                   </View>

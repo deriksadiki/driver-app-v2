@@ -77,6 +77,29 @@ export default styles =  StyleSheet.create({
         marginLeft : width * 0.02,
     },
 
+    routeCardContent :{
+        marginTop : height * 0.018,
+        marginLeft : width * 0.02,
+    },
+
+    routeCardContent2 :{
+        position:'absolute',
+        marginTop : height * 0.025,
+        marginLeft : width * 0.24,
+    },
+
+    routerImg :{
+        width : 70,
+        height : 70,
+        borderRadius : 70 / 2
+    },
+    routerImg2 :{
+        width : 55,
+        height : 55,
+        borderRadius : 55 / 2
+    },
+
+
     cardContent2 : {
         position:'absolute',
         marginTop : height * 0.015,
@@ -121,9 +144,21 @@ export default styles =  StyleSheet.create({
         width: 40,
         borderRadius: 40/2
     },
+
+    SelectedCircle : {
+        backgroundColor: '#ffe200',
+        height : 40,
+        width: 40,
+        borderRadius: 40/2
+    },
     
     packsBody : {
         height: height * 0.9
+    },
+    packsBody2 : {
+        height: height * 0.4,
+        opacity: 0.5,
+        backgroundColor: '#F2F2F2',
     },
 
     packsTxt : {
@@ -148,5 +183,81 @@ export default styles =  StyleSheet.create({
     bottomBtn : {
         position: 'absolute',
         bottom: 10,
-    }
+       flexDirection: 'row'
+    },
+    routeTxt :{
+        width: width,
+        height : height * 0.1,
+        backgroundColor: '#FFFFFF',
+        textAlign: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    arriveBtn :{
+        marginLeft: width * 0.1,
+        width : width * 0.4,
+        backgroundColor: '#ffe200',
+        borderTopLeftRadius: 20,
+        borderBottomLeftRadius: 20,
+        height : height * 0.07,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    returnBtn :{
+        alignSelf: 'flex-end',
+        width : width * 0.4,
+        backgroundColor: '#333333',
+        borderBottomRightRadius: 20,
+        borderTopRightRadius: 20, 
+        height : height * 0.07,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    
+  routeCard :{
+      width : width * 0.9,
+      height: height * 0.3,
+      backgroundColor: '#FFFFFF',
+  },
+
+  alignRoute :{
+    marginLeft: width * 0.05,
+  },
+
+  routerText :{
+      marginTop: 10,
+    width: width * 0.8,
+    backgroundColor: '#F2F2F2',
+    height : height * 0.06,
+    borderTopLeftRadius: 20,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+        borderTopRightRadius: 20, 
+        justifyContent: 'flex-start',
+  },
+  txtBorder :{
+      borderWidth: .25,
+      marginTop: 10,
+      marginLeft: 10,
+      width: width * 0.55,
+      height: height * 0.03,
+      borderTopLeftRadius: 20,
+      borderBottomLeftRadius: 20,
+      borderBottomRightRadius: 20,
+      borderTopRightRadius: 20, 
+  },
+
+  callbtn :{
+      position: 'absolute',
+      alignSelf:'flex-end',
+      marginTop: -10,
+  },
+
+  backBtn :{
+      position: 'absolute',
+      left: 10
+  }
 })

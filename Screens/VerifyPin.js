@@ -5,6 +5,12 @@ import { View, Text, StatusBar } from 'react-native';
  
 export default class VerifyPin extends React.Component{
 
+    componentDidMount(){
+        setTimeout(() => {
+            this.props.navigation.navigate('addPacks');
+        }, 2000);
+    }
+
   render(){
     return(
       <View style={Style.body}>
