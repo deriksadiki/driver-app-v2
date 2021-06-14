@@ -259,5 +259,19 @@ export default styles =  StyleSheet.create({
   backBtn :{
       position: 'absolute',
       left: 10
-  }
+  },
+
+  input:{
+    width: width * 0.8,
+    height: 38,
+    borderWidth: .5,
+    // padding: 10,
+    // borderRadius: 38*(0.3),
+    // borderWidth: 2,
+    // borderColor: '#f2f2f2',
+    // backgroundColor: '#f2f2f2',
+    // marginTop: 38*(.50),
+    // alignItems: 'center',
+  },
+
 })
