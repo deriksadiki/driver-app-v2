@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, TouchableOpacity, StatusBar, Image, Switch, ScrollView} from 'react-native';
 import Style from '../Style/Style';
 import Box from '../Images/box.png';
+import database from '@react-native-firebase/database';
 
  
 export default class Home extends React.Component{

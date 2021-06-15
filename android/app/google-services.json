@@ -1,0 +1,69 @@
+{
+    "project_info": {
+      "project_number": "1060972970372",
+      "firebase_url": "https://zipi-app.firebaseio.com",
+      "project_id": "zipi-app",
+      "storage_bucket": "zipi-app.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:1060972970372:android:310897963a32727e92ddd1",
+          "android_client_info": {
+            "package_name": "com.zipi.zipifirst"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "1060972970372-0dd750maspiqc50duodu4o4crfcod9ve.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyAyRovW8ENxx1cj5-k3pASzEUhQo7aB73c"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "1060972970372-0dd750maspiqc50duodu4o4crfcod9ve.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:1060972970372:android:761d52edd861554092ddd1",
+          "android_client_info": {
+            "package_name": "com.zipidriver"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "1060972970372-0dd750maspiqc50duodu4o4crfcod9ve.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyAyRovW8ENxx1cj5-k3pASzEUhQo7aB73c"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "1060972970372-0dd750maspiqc50duodu4o4crfcod9ve.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }

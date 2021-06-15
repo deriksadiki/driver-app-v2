@@ -1,6 +1,6 @@
 import React from 'react'
 import Style from '../Style/Style';
-import {View, Text, StatusBar, TouchableOpacity, Image , ScrollView, Modal, TextInput} from 'react-native';
+import {View, Text, StatusBar, TouchableOpacity, Image , ScrollView, Modal, TextInput, Alert} from 'react-native';
 import Box from '../Images/box.png';
 import Call from '../Images/call.png';
 import Loc from '../Images/loc.png'
@@ -24,6 +24,22 @@ export default class EnRoute extends React.Component{
 
       arrived(){
         this.setState({verifyPinModal : true })
+      }
+
+      return(){
+        Alert.alert(
+            '',
+            'Are you sure you want to return this package?',
+            [
+              {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+              },
+              { text: 'OK', onPress: () => console.log('ok pressed')}
+            ],
+            { cancelable: false }
+          );
       }
 
   render(){
@@ -90,7 +106,7 @@ export default class EnRoute extends React.Component{
             <TouchableOpacity style={Style.arriveBtn} onPress={()=>{this.arrived()}}>
                 <Text>Arrived</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.returnBtn}>
+            <TouchableOpacity style={Style.returnBtn} onPress={()=>{this.return()}}>
                 <Text style={{color: '#ffe200'}}>Return</Text>
             </TouchableOpacity>
         </View>
