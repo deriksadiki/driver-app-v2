@@ -14,7 +14,7 @@ const Stack = createStackNavigator();
 
 const MainStack = () =>{
     return(
-    <Stack.Navigator initialRouteName="Home" headerMode="modal"  mode="card"
+    <Stack.Navigator initialRouteName="enroute" headerMode="modal"  mode="card"
     screenOptions={{
         ...TransitionPresets.SlideFromRightIOS }}>
         <Stack.Screen name="Home" component={Home} />

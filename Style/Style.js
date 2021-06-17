@@ -265,13 +265,29 @@ export default styles =  StyleSheet.create({
     width: width * 0.8,
     height: 38,
     borderWidth: .5,
-    // padding: 10,
-    // borderRadius: 38*(0.3),
-    // borderWidth: 2,
-    // borderColor: '#f2f2f2',
-    // backgroundColor: '#f2f2f2',
-    // marginTop: 38*(.50),
-    // alignItems: 'center',
   },
+
+  nextTrip :{
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    height: totHeight * 0.4,
+    width: width,
+  },
+
+  tripNext :{
+    opacity: 0.4,
+    backgroundColor: 'black',
+    bottom: 0,
+    width: width,
+    height : totHeight * 0.6,
+  },
+
+  alignPinItems: {
+      marginTop: 20,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center'
+  },
+
 
 })

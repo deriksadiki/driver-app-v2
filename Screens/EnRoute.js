@@ -14,12 +14,13 @@ export default class EnRoute extends React.Component{
           selectedPacks : [],
           packsArray : [],
           showModal : false,
-          verifyPinModal : false 
+          verifyPinModal : false,
+          nextTrip : false
         }
       }
 
       verifyPin(){
-          this.setState({verifyPinModal : false })
+          this.setState({verifyPinModal : false, nextTrip : true })
       }
 
       arrived(){
@@ -40,6 +41,10 @@ export default class EnRoute extends React.Component{
             ],
             { cancelable: false }
           );
+      }
+
+      startTrip (){
+        this.setState({nextTrip : false })
       }
 
   render(){
@@ -141,6 +146,24 @@ export default class EnRoute extends React.Component{
                 </TouchableOpacity>
             </View>
             </View>
+        </Modal>
+
+        <Modal transparent visible={this.state.nextTrip} animationType='slide'>
+        <View style={Style.tripNext} />
+
+          <View style={Style.nextTrip}>
+            <View style={Style.alignPinItems}>
+                <Image style={Style.routerImg} source={Box} />
+              <Text style={{fontSize: 17, marginBottom: 10, marginTop: 10}}>Pin Approved</Text>
+              <Text>Click "Next trip" when you're ready for the next trip</Text>
+            </View>
+        
+        <View style={Style.bottomBtn}>
+                <TouchableOpacity style={Style.btn} onPress={()=>{this.startTrip()}}>
+                    <Text>Next Trip</Text>
+                </TouchableOpacity>
+        </View>
+          </View>
         </Modal>
 
       </View>
