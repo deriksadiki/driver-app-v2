@@ -4,6 +4,7 @@ import Style from '../Style/Style';
 import Box from '../Images/box.png';
 import Geolocation from 'react-native-geolocation-service';
 import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
 
  
 export default class Home extends React.Component{
@@ -14,7 +15,8 @@ export default class Home extends React.Component{
       text: 'Offline',
       reqArray : [],
       current_location : '',
-      current_coords : null
+      current_coords : null, 
+      driverObject : null
     }
   }
 
@@ -27,11 +29,19 @@ export default class Home extends React.Component{
   }
 
   selectReq(val){
-    this.props.navigation.navigate('verify', {pack : val, location: this.state.current_coords});
+    this.props.navigation.navigate('verify', {pack : val, location: this.state.current_coords, driverObject: this.state.driverObject});
   }
 
   componentDidMount(){
+    this.getDriverDetails()
     this.trackDriver();
+  }
+
+  getDriverDetails(){
+    let user = auth().currentUser;
+    database().ref('drivers/' + user.uid).once('value', data =>{
+      this.setState({driverObject : data.val()})
+    })
   }
 
   getRequests(){
@@ -113,8 +123,8 @@ setUpdateDriverLocation = async (location, coords) =>{
                     <Image style={Style.boxImg} source={Box} />
                   </View>
                   <View style={Style.cardContent2}>
-                    <Text style={Style.nameTXT}>6654FGTH</Text>
-                    <Text style={Style.detailsTXT}>5km</Text>
+                    <Text style={Style.nameTXT}> {val.id}</Text>
+                    <Text style={Style.detailsTXT}> {val.distance}km</Text>
                   </View>
               </TouchableOpacity>
       )
@@ -122,14 +132,17 @@ setUpdateDriverLocation = async (location, coords) =>{
     return(
         <View style={Style.body}>
             <StatusBar backgroundColor="black" />
+         
             <View style={Style.header}>
+            {this.state.driverObject !== null ?
+            <View>
                 <View style={Style.imageAlign}>
-                     <Image style={Style.image} source={{ uri: "https://media.vanityfair.com/photos/5ff69600c97c041ce0e7ac0d/master/pass/1230086798"}} />
+                     <Image style={Style.image} source={{ uri: this.state.driverObject.img}} />
                 </View>
                 <View style={Style.headerText}>
-                    <Text style={Style.nameTXT}>Jabulani Masuku</Text>
-                    <Text style={Style.detailsTXT}>1220 Trips</Text>
-                    <Text style={Style.detailsTXT}>Rating 4.9</Text>
+                    <Text style={Style.nameTXT}>{this.state.driverObject.firstName} {this.state.driverObject.surname}</Text>
+                    <Text style={Style.detailsTXT}>{this.state.driverObject.totalTrips} Trips</Text>
+                    <Text style={Style.detailsTXT}>Rating 5</Text>
                         <Switch
                         style={{width: 40}}
                         trackColor={{ false: "#767577", true: "#81b0ff" }}
@@ -142,7 +155,10 @@ setUpdateDriverLocation = async (location, coords) =>{
                           <Text style={Style.detailsTXT}>{this.state.text}</Text>
                       </View>
                 </View>
-  
+                </View>
+                  :
+                  <View></View>
+                  }
             </View>
             <View style={Style.heading}>
               <Text style={Style.nameTXT}>Requests</Text>

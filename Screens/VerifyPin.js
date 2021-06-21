@@ -2,7 +2,7 @@ import React from 'react'
 import Style from '../Style/Style';
 import getDirections from 'react-native-google-maps-directions'
 import VIForegroundService from '@voximplant/react-native-foreground-service';
-import { View, Text, StatusBar } from 'react-native';
+import { View, Text, StatusBar, Linking } from 'react-native';
  
 export default class VerifyPin extends React.Component{
   constructor(){
@@ -15,6 +15,7 @@ export default class VerifyPin extends React.Component{
 
     componentDidMount(){
         let val = this.props.route.params.pack;
+        console.log(val.pu_coords)
         this.setState({
           pack : val,
           pin : val.pin,
@@ -26,23 +27,7 @@ export default class VerifyPin extends React.Component{
     }
 
     openMap(){
-      const data = {
-        source: {
-         latitude: this.state.coords.split(',')[0],
-         longitude: this.state.coords.split(',')[1],
-       },
-       destination: {
-         latitude: this.state.destinationCoords.split(',')[0],
-         longitude: this.state.destinationCoords.split(',')[1]
-       }
-     }
-     this.startForegroundService();
-     getDirections(data)
-
-        // setTimeout(() => {
-        //   VIForegroundService.stopService();
-        //     this.props.navigation.navigate('addPacks');
-        // }, 10000);
+     // Linking.openURL(`google.navigation:q=${this.state.destinationCoords}`)
     } 
 
     async startForegroundService() {
@@ -67,6 +52,28 @@ export default class VerifyPin extends React.Component{
     }    
   }
 
+  sendReleaseFrom(){
+    let xhr = new XMLHttpRequest();
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var plate = this.state.plate;
+    var deliveryId = this.state.deliveryId;
+    var parentKey = this.state.parentKey;
+    let name = this.state.name + " " + this.state.surname
+    let car = this.state.car;
+    let url = 'https://zipi.co.za/p54_release.php?';
+    let p54email = "nelo@landsea-shipping.co.za";
+    let params  = `address=${p54email}&time=${time}&date=${date}&driver_name=${name}&driver_car=${car}&plate=${plate}&deliveryId=${deliveryId}&parentKey=${parentKey}`;
+    xhr.open('GET', `${url}${params}`, true)
+    xhr.responseType = 'json';
+    xhr.onreadystatechange = () =>{
+        if(xhr.status == '200' & xhr.readyState == '4'){
+            const response = xhr.response;
+        }
+    }
+    xhr.send();
+}
 
   render(){
     return(

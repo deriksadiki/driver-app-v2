@@ -42,7 +42,7 @@ export default styles =  StyleSheet.create({
     statusText : {
         position: 'absolute',
         marginTop : height * 0.085,
-        marginLeft : width * 0.12,
+        marginLeft : width * 0.10,
     },
 
     nameTXT:{
