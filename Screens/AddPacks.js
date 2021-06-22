@@ -1,18 +1,50 @@
 import React from 'react'
 import Style from '../Style/Style';
-
-import { View, Text, StatusBar, TouchableOpacity, Image , ScrollView} from 'react-native';
+import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
+import { View, Text, StatusBar, TouchableOpacity, Image , ScrollView, Alert} from 'react-native';
  
+let counter = 0;
+let tempArr = new Array();
 export default class AddPacks extends React.Component{
 
     constructor(){
         super()
         this.state = {
-          test : [0, 1, 2, 3, 4,5, 6,7,8,9,19,3,3,3,3],
+          allPacks : [],
           selectedPacks : [],
-          packsArray : []
+          packsArray : [],
         }
       }
+
+      componentDidMount(){
+        this.setState({
+          packs : this.props.route.params.packs,
+          driverObject : this.props.route.params.driverObject,
+          packsKeys : this.props.route.params.packs.reqKeys
+        }, ()=>{
+          this.getPacks(this.state.packsKeys[counter]);
+        })
+    }
+
+    getPacks(key){
+          database().ref('newReq/' + key).once('value', data =>{
+            let details = data.val();
+            details.key = key
+            tempArr.push(details);
+          }).then(() =>{
+            counter++;
+            if (counter === this.state.packsKeys.length){
+              this.pushPacks(tempArr)
+            }else{
+              this.getPacks(this.state.packsKeys[counter])
+            }
+          }) 
+    }
+
+    pushPacks(tempArr){
+      this.setState({allPacks : tempArr})
+    }
 
       selectPack(val, indx){
           let tempArr = this.state.selectedPacks;
@@ -38,26 +70,25 @@ export default class AddPacks extends React.Component{
       startTrip(){
           let tempArr =  new Array();
           for (var x = 0; x < this.state.selectedPacks.length; x++){
-              tempArr.push(this.state.test[this.state.selectedPacks[x]]);
-          }
-
+              tempArr.push(this.state.allPacks[this.state.selectedPacks[x]]);
+           }
           if (tempArr.length > 0){
-            this.props.navigation.navigate('enroute');
+            this.props.navigation.navigate('enroute', {packages : tempArr});
           }else{
-              alert('Please select packs before you can start the delivery')
+            Alert.alert('', 'Please select packs before you can start the delivery')
           }
       }
 
   render(){
-    const packs = this.state.test.map((val, indx) =>{
+    const packs = this.state.allPacks.map((val, indx) =>{
         return(
           <TouchableOpacity style={Style.card} key={indx} onPress={() =>{this.selectPack(val, indx)}}>
                     <View style={Style.cardContent}>
                       <View style={ this.state.selectedPacks.indexOf(indx) >= 0 ? Style.SelectedCircle : Style.circle}></View>
                     </View>
                     <View style={Style.cardContent2}>
-                      <Text style={Style.nameTXT}>6654FGTH</Text>
-                      <Text style={Style.detailsTXT}>5km</Text>
+                      <Text style={Style.nameTXT}>{val.order_id}</Text>
+                      <Text style={Style.detailsTXT}>{val.distance} km</Text>
                     </View>
                 </TouchableOpacity>
         )

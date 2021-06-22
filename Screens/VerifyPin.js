@@ -39,7 +39,7 @@ export default class VerifyPin extends React.Component{
       database().ref('apiReq/' + this.state.pack.parentKey).on('value', data =>{
         let details = data.val();
         if (details.verified){
-          this.props.navigation.navigate('addPacks');
+          this.props.navigation.navigate('addPacks', {driverObject: this.state.driverObject, packs : this.state.pack});
         }
       })
     }
@@ -48,7 +48,7 @@ export default class VerifyPin extends React.Component{
       database().ref('apiReq/' + this.state.pack.parentKey).once('value', data =>{
         let details = data.val();
         if (!details.selected){
-          database().ref('apiReq/' + this.state.pack.parentKey).update({selected: true}).then(() =>{
+          database().ref('apiReq/' + this.state.pack.parentKey).update({selected: true, driverId : auth().currentUser.uid}).then(() =>{
             this.sendReleaseFrom()
           })
         }

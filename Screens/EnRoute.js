@@ -10,7 +10,7 @@ export default class EnRoute extends React.Component{
     constructor(){
         super()
         this.state = {
-          test : [0, 1, 2, 3, 4,5, 6,7,8,9,19,3,3,3,3],
+          packages : [],
           selectedPacks : [],
           packsArray : [],
           showModal : false,
@@ -21,6 +21,13 @@ export default class EnRoute extends React.Component{
 
       verifyPin(){
           this.setState({verifyPinModal : false, nextTrip : true })
+      }
+
+      componentDidMount(){
+        this.setState({
+          packages : this.props.route.params.packages,
+          totTrips :  this.props.route.params.packages.length
+        })
       }
 
       arrived(){
@@ -49,15 +56,15 @@ export default class EnRoute extends React.Component{
 
   render(){
 
-    const packs = this.state.test.map((val, indx) =>{
+    const packs = this.state.packages.map((val, indx) =>{
         return(
           <TouchableOpacity disabled={true} style={Style.card} key={indx}>
                     <View style={Style.cardContent}>
                       <Image style={Style.boxImg} source={Box} />
                     </View>
                     <View style={Style.cardContent2}>
-                      <Text style={Style.nameTXT}>6654FGTH</Text>
-                      <Text style={Style.detailsTXT}>5km</Text>
+                      <Text style={Style.nameTXT}>{val.order_id}</Text>
+                      <Text style={Style.detailsTXT}>{val.distance} km</Text>
                     </View>
                 </TouchableOpacity>
         )
@@ -66,9 +73,12 @@ export default class EnRoute extends React.Component{
     return(
         <View style={Style.body}>
             <StatusBar backgroundColor="black" />
+        {this.state.packages.length > 0 ? 
         <View style={Style.routeTxt}>
-            <Text style={{fontSize: 20}}>GHGGHV8764</Text>
+            <Text style={{fontSize: 20}}>{this.state.packages[0].order_id}</Text>
         </View>
+        :
+        <View></View> }
 
         <View style={Style.packsBody2}>
               <ScrollView style={{marginBottom: 30}}>
@@ -78,7 +88,7 @@ export default class EnRoute extends React.Component{
 
       <View style={Style.alignRoute}>
             <View style={{marginBottom: 15}}>
-                <Text>Current Trip (1/5)</Text>
+                <Text>Current Trip (1/{this.state.totTrips})</Text>
             </View>
             <View style={Style.routeCard}>
                      <View style={Style.routeCardContent}>
