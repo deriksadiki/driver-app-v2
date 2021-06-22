@@ -3,6 +3,8 @@ import Style from '../Style/Style';
 import getDirections from 'react-native-google-maps-directions'
 import VIForegroundService from '@voximplant/react-native-foreground-service';
 import { View, Text, StatusBar, Linking } from 'react-native';
+import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
  
 export default class VerifyPin extends React.Component{
   constructor(){
@@ -20,8 +22,11 @@ export default class VerifyPin extends React.Component{
           pack : val,
           pin : val.pin,
           coords : this.props.route.params.location,
-          destinationCoords: val.pu_coords
+          destinationCoords: val.pu_coords,
+          driverObject : this.props.route.params.driverObject
         }, ()=>{
+          this.checkFormSelection();
+          this.checkVerification();
           this.openMap();
         })
     }
@@ -29,6 +34,26 @@ export default class VerifyPin extends React.Component{
     openMap(){
      // Linking.openURL(`google.navigation:q=${this.state.destinationCoords}`)
     } 
+
+    checkVerification(){
+      database().ref('apiReq/' + this.state.pack.parentKey).on('value', data =>{
+        let details = data.val();
+        if (details.verified){
+          this.props.navigation.navigate('addPacks');
+        }
+      })
+    }
+
+    checkFormSelection(){
+      database().ref('apiReq/' + this.state.pack.parentKey).once('value', data =>{
+        let details = data.val();
+        if (!details.selected){
+          database().ref('apiReq/' + this.state.pack.parentKey).update({selected: true}).then(() =>{
+            this.sendReleaseFrom()
+          })
+        }
+      })
+    }
 
     async startForegroundService() {
       const channelConfig = {
@@ -57,19 +82,20 @@ export default class VerifyPin extends React.Component{
     var today = new Date();
     var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    var plate = this.state.plate;
-    var deliveryId = this.state.deliveryId;
-    var parentKey = this.state.parentKey;
-    let name = this.state.name + " " + this.state.surname
-    let car = this.state.car;
+    var plate = this.state.driverObject.plateNum;
+    var deliveryId = this.state.pack.id;
+    var parentKey = this.state.pack.parentKey;
+    let name = this.state.driverObject.firstName + " " + this.state.driverObject.surname
+    let car = this.state.driverObject.mode;
     let url = 'https://zipi.co.za/p54_release.php?';
-    let p54email = "nelo@landsea-shipping.co.za";
+    let p54email = "derik@landsea-shipping.co.za";
     let params  = `address=${p54email}&time=${time}&date=${date}&driver_name=${name}&driver_car=${car}&plate=${plate}&deliveryId=${deliveryId}&parentKey=${parentKey}`;
     xhr.open('GET', `${url}${params}`, true)
     xhr.responseType = 'json';
     xhr.onreadystatechange = () =>{
         if(xhr.status == '200' & xhr.readyState == '4'){
             const response = xhr.response;
+            console.log('sent')
         }
     }
     xhr.send();

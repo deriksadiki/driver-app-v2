@@ -51,9 +51,11 @@ export default class Home extends React.Component{
         let details = data.val();
         let keys =  Object.keys(details);
         for (var x = 0; x < keys.length; x++){
-          tempArr.push(details[keys[x]]);
+          let obj  = details[keys[x]];
+          obj.parentKey = keys[x]
+          tempArr.push(obj);
         }
-        this.setState({reqArray : tempArr})
+       this.setState({reqArray : tempArr})
       }
     })
   }
