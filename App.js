@@ -11,12 +11,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import AuthStack from './AuthStack/Auth';
 import MainStack from './MainStack/Main'; 
 import { StatusBar, PermissionsAndroid, Alert } from 'react-native';
+import auth from '@react-native-firebase/auth';
 
 
 export default class App extends React.Component{
 
+  constructor(){
+    super();
+    this.state = {
+      authState : false
+    }
+  }
+
   componentDidMount(){
     this.checkPermissionStatus()
+    this.suscribeAuth();
 }
 
   async checkPermissionStatus(){
@@ -63,11 +72,35 @@ export default class App extends React.Component{
     }
   }
 
+  suscribeAuth(){
+    try{
+      auth().onAuthStateChanged(user => {
+    if(user){
+      this.setState({
+        authState: true
+      }, ()=>{
+        //this.myModal.dismissModal();
+        //setTimeout(()=>{SplashScreen.hide();}, 5000)
+      })
+    }else{
+      //setTimeout(()=>{SplashScreen.hide();}, 100)
+    }
+  });
+  }catch(error){
+     console.log(error)
+    }
+  }
+
   render(){
     return(
       <NavigationContainer>
         <StatusBar backgroundColor="black" />
-        <MainStack />
+        {
+          this.state.authState ? <MainStack />
+          :
+          <AuthStack />
+        }
+        
       </NavigationContainer>
     )
   }

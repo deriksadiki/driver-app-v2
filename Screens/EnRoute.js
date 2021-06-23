@@ -1,6 +1,6 @@
 import React from 'react'
 import Style from '../Style/Style';
-import {View, Text, StatusBar, TouchableOpacity, Image , ScrollView, Modal, TextInput, Alert} from 'react-native';
+import {View, Text, StatusBar, TouchableOpacity, Image , ScrollView, Modal, TextInput, Alert, Linking} from 'react-native';
 import Box from '../Images/box.png';
 import Call from '../Images/call.png';
 import Loc from '../Images/loc.png'
@@ -85,7 +85,7 @@ export default class EnRoute extends React.Component{
               {packs}
               </ScrollView>
         </View>
-
+        {this.state.packages.length > 0 ? 
       <View style={Style.alignRoute}>
             <View style={{marginBottom: 15}}>
                 <Text>Current Trip (1/{this.state.totTrips})</Text>
@@ -95,9 +95,9 @@ export default class EnRoute extends React.Component{
                       <Image style={Style.routerImg} source={Box} />
                     </View>
                     <View style={Style.routeCardContent2}>
-                      <Text style={Style.nameTXT}>Jabulani Malema</Text>
-                      <Text style={Style.detailsTXT}>REF: 22121FGB</Text>
-                      <Text style={Style.detailsTXT}>Johannesburg, Roodepoort, 13 leghorn road, princess</Text>
+                      <Text style={Style.nameTXT}>{this.state.packages[0].booking_name}</Text>
+                      <Text style={Style.detailsTXT}>REF: {this.state.packages[0].booking_ref}</Text>
+                      <Text style={Style.detailsTXT}>{this.state.packages[0].do_location}</Text>
                     </View>
 
                     <View style={Style.alignRoute}>
@@ -105,17 +105,18 @@ export default class EnRoute extends React.Component{
                         <Text style={{fontSize: 11}}>Message/ Special Instructions/ Packages</Text>
                         <View style={Style.routerText}>
                             <TouchableOpacity style={Style.txtBorder} onPress={()=>{this.setState({showModal: true})}}>
-                            <Text>  ask for marry at the end of the road</Text>
+                            <Text>{this.state.packages[0].instructions}</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={Style.callbtn}>
+                            <TouchableOpacity style={Style.callbtn} onPress={()=>{Linking.openURL(`tel:${this.state.packages[0].cellphone}`)}}>
                                 <Image style={Style.routerImg2} source={Call} />
                             </TouchableOpacity>
                         </View>
                     </View>
             </View>
      </View>
-        
+        :
+        <View></View> }
 
         <View style={Style.bottomBtn}>
             <TouchableOpacity style={Style.arriveBtn} onPress={()=>{this.arrived()}}>
@@ -127,16 +128,19 @@ export default class EnRoute extends React.Component{
         </View>
 
         <Modal visible={this.state.showModal} animationType='slide'>
+        {this.state.packages.length > 0 ? 
             <View style={Style.body}>
             <View style={Style.routeTxt}>
                 <TouchableOpacity style={Style.backBtn} onPress={()=>{this.setState({showModal: false})}}>
                     <Text>Back</Text>
                 </TouchableOpacity>
-                <Text style={{fontSize: 20}}>Nelo Mandela</Text>
+                <Text style={{fontSize: 20}}>{this.state.packages[0].booking_name}</Text>
             </View>
                 <Text style={{textAlign:'center', marginTop: 20}}>Special Instructions</Text>
-                <Text style={{textAlign:'center', marginTop: 20, width:'97%', marginLeft: 5}}>Text messages are used for personal, family, business and social purposes. Governmental and non-governmental organizations use text messaging for communication between colleagues. In the 2010s, the sending of short informal messages became an accepted part of many cultures, as happened earlier with emailing.[1] This makes texting a quick and easy way to communicate with friends, family and colleagues, including in contexts where a call would be impolite or inappropriate (e.g., calling very late at night or when one knows the other person is busy with family or work activities). Like e-mail and voicemail and unlike calls (in which the caller hopes to speak directly with the recipient), texting does not require the caller and recipient to both be free at the same moment; this permits communication even between busy individuals. Text messages can also be used to interact with automated systems, for example, to order products or services from e-commerce websites, or to participate in online contests. Advertisers and service providers use</Text>
+                <Text style={{textAlign:'center', marginTop: 20, width:'97%', marginLeft: 5}}>{this.state.packages[0].instructions}</Text>
             </View>
+            :
+            <View></View> }
         </Modal>
 
         <Modal visible={this.state.verifyPinModal} animationType='slide'>

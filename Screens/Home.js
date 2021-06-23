@@ -46,14 +46,16 @@ export default class Home extends React.Component{
 
   getRequests(){
     database().ref('apiReq/').on('value', data =>{
-      if (data.val() !== null  || data.val() !== undefined){
+      if (data.val() != null || data.val() != undefined){
         let tempArr =  new Array();
         let details = data.val();
         let keys =  Object.keys(details);
         for (var x = 0; x < keys.length; x++){
-          let obj  = details[keys[x]];
-          obj.parentKey = keys[x]
-          tempArr.push(obj);
+          if (!details[keys[x]].selected){
+            let obj  = details[keys[x]];
+            obj.parentKey = keys[x]
+            tempArr.push(obj);
+          }
         }
        this.setState({reqArray : tempArr})
       }

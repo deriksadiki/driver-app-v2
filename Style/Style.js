@@ -289,5 +289,55 @@ export default styles =  StyleSheet.create({
     alignItems: 'center'
   },
 
+  loginBody :{
+    width: width,
+    height : height * 0.7,
+    backgroundColor: '#FFFFFF',
+    borderBottomLeftRadius: 30,
+    borderBottomEndRadius: 30
+  },
+
+  loginInput :{
+    backgroundColor: '#F2F2F2',
+    width: width * 0.9,
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    borderTopRightRadius: 20,
+    marginTop: 10,
+    marginBottom: 10 
+  },
+
+  alignLogin :{
+    marginLeft: width * 0.05,
+    marginTop: height * 0.45
+  },
+
+  loginAlignBtn :{
+      flexDirection:'row',
+      marginTop: 30,
+      marginLeft: 20
+  },
+
+  loginBtn :{
+    width : width * 0.4,
+    backgroundColor: '#ffe200',
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    borderTopRightRadius: 20, 
+    height : height * 0.07,
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: width * 0.06
+  }, 
+
+  loginImg :{
+      position:'absolute',
+      marginLeft: width * 0.3,
+        marginTop: -height * 0.22
+  }
 
 })
