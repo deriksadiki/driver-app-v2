@@ -38,7 +38,7 @@ export default class App extends React.Component{
        { cancelable: false }
      )
     }else{
-      console.log('here')
+      console.log('got permission')
     }
   }
 

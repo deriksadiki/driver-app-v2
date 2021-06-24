@@ -48,7 +48,7 @@ export default class VerifyPin extends React.Component{
       database().ref('apiReq/' + this.state.pack.parentKey).once('value', data =>{
         let details = data.val();
         if (!details.selected){
-          database().ref('apiReq/' + this.state.pack.parentKey).update({selected: true, driverId : auth().currentUser.uid}).then(() =>{
+          database().ref('apiReq/' + this.state.pack.parentKey).update({selected: true, driverId : auth().currentUser.uid, selectedPacks : false}).then(() =>{
             this.sendReleaseFrom()
           })
         }

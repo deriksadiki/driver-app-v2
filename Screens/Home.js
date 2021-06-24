@@ -6,7 +6,8 @@ import Geolocation from 'react-native-geolocation-service';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 
- 
+ let counter = 0;
+ let tempArray = new Array();
 export default class Home extends React.Component{
   constructor(){
     super()
@@ -44,6 +45,65 @@ export default class Home extends React.Component{
     })
   }
 
+  checkPacksSelection(){ 
+    database().ref('apiReq/').once('value', data =>{
+      if (data.val() != null || data.val() != undefined){
+        let details = data.val();
+        let keys =  Object.keys(details);
+        for (var x = 0; x < keys.length; x++){
+          if (details[keys[x]].selected && details[keys[x]].driverId === auth().currentUser.uid){
+            let obj  = details[keys[x]];
+            obj.parentKey = keys[x]
+            if (details[keys[x]].verified){
+                this.gotToPacks(obj)
+                break;
+            }else{
+              this.selectReq(obj);
+              break;
+            }
+          }
+        }
+      }
+    })
+  }
+
+  gotToPacks(obj){
+    if (obj.selectedPacks){
+      this.goToMainScreen(obj);
+    }else{
+      this.props.navigation.navigate('addPacks', {driverObject: this.state.driverObject, packs : obj});
+    }
+    
+  }
+
+  goToMainScreen(obj){
+    this.setState({
+      packsKeys : obj.reqKeys
+    }, ()=>{
+      this.getPacks(this.state.packsKeys[counter]);
+    })
+  }
+
+  getPacks(key){
+    database().ref('newReq/' + key).once('value', data =>{
+      let details = data.val();
+      details.key = key
+      tempArray.push(details);
+    }).then(() =>{
+      counter++;
+      if (counter === this.state.packsKeys.length){
+        this.pushPacks(tempArray)
+      }else{
+        this.getPacks(this.state.packsKeys[counter])
+      }
+    }) 
+}
+
+pushPacks(tempArr){
+  this.props.navigation.navigate('enroute', {packages : tempArr});
+}
+
+
   getRequests(){
     database().ref('apiReq/').on('value', data =>{
       if (data.val() != null || data.val() != undefined){
@@ -67,6 +127,7 @@ export default class Home extends React.Component{
         let location =  info.coords.latitude + ',' + info.coords.longitude; 
         this.setState({current_coords : location}, ()=>{
           this.getRequests();
+          this.checkPacksSelection();
           this.getAddress(location)
         })
     },

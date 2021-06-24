@@ -1,37 +1,85 @@
 import React from 'react'
 import Style from '../Style/Style';
-import {View, Text, StatusBar, TouchableOpacity, Image , ScrollView, Modal, TextInput, Alert, Linking} from 'react-native';
+import {View, Text, StatusBar, TouchableOpacity, Image , ScrollView, Modal, TextInput, Alert, Linking, BackHandler} from 'react-native';
 import Box from '../Images/box.png';
 import Call from '../Images/call.png';
 import Loc from '../Images/loc.png'
+import axios from 'axios';
  
 export default class EnRoute extends React.Component{
 
     constructor(){
         super()
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
         this.state = {
-          packages : [],
+          packages : null,
           selectedPacks : [],
+          allPackages : [],
           packsArray : [],
           showModal : false,
           verifyPinModal : false,
-          nextTrip : false
+          nextTrip : false,
+          pin : ''
         }
       }
 
+      UNSAFE_componentWillMount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+
+    handleBackButtonClick() {
+      BackHandler.exitApp();
+   }
+
       verifyPin(){
-          this.setState({verifyPinModal : false, nextTrip : true })
+        console.log(this.state.pin)
+        console.log(this.state.packages.pu_pin)
+        if (this.state.packages.pu_pin == this.state.pin){
+          this.setState({verifyPinModal : false, nextTrip : true, packages : this.state.allPackages[0] }, () => this.changePack(this.state.packages.pu_pin))
+        }else{
+          Alert.alert('', 'The Pin you have entered is incorrect!');
+        }
+          
       }
 
       componentDidMount(){
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+        let packs = this.props.route.params.packages
         this.setState({
-          packages : this.props.route.params.packages,
-          totTrips :  this.props.route.params.packages.length
-        })
+          packages : this.props.route.params.packages[0],
+          allPackages : packs,
+          totTrips :  packs.length
+        }, () => this.changePack(this.state.packages.pu_pin))
       }
 
       arrived(){
-        this.setState({verifyPinModal : true })
+        this.setState({verifyPinModal : true})
+      }
+
+      changePack(pin){
+        let tmpArr = new Array();
+          for (var x = 0; x < this.state.allPackages.length; x++){
+            if (this.state.allPackages[x].pu_pin !== pin){
+              tmpArr.push(this.state.allPackages[x])
+            }
+          }
+          if (this.state.allPackages.length > 0){
+            this.setState({
+              allPackages : tmpArr
+            },  () =>{
+              //this.sendSMS(this.state.packages.cellphone, this.state.packages.pu_pin)
+            })
+          }  else{
+            Alert.alert('', 'you are done, thank you');
+          }  
+      }
+
+      sendSMS(cellphone, pin){
+        var body = `Thank you for using Zipi Delivery. Zipi PIN: ${pin}. Please present it to your driver.`;
+        var sms = `https://us-central1-zipi-app.cloudfunctions.net/sendSms?cellphone=${cellphone.replace("0","27")}&message=${body}`;
+       // axios.get(sms).then((data) =>{
+        //   console.log('sent)
+        // })
       }
 
       return(){
@@ -56,7 +104,7 @@ export default class EnRoute extends React.Component{
 
   render(){
 
-    const packs = this.state.packages.map((val, indx) =>{
+    const packs = this.state.allPackages.map((val, indx) =>{
         return(
           <TouchableOpacity disabled={true} style={Style.card} key={indx}>
                     <View style={Style.cardContent}>
@@ -73,9 +121,9 @@ export default class EnRoute extends React.Component{
     return(
         <View style={Style.body}>
             <StatusBar backgroundColor="black" />
-        {this.state.packages.length > 0 ? 
+        {this.state.packages ? 
         <View style={Style.routeTxt}>
-            <Text style={{fontSize: 20}}>{this.state.packages[0].order_id}</Text>
+            <Text style={{fontSize: 20}}>{this.state.packages.order_id}</Text>
         </View>
         :
         <View></View> }
@@ -85,7 +133,7 @@ export default class EnRoute extends React.Component{
               {packs}
               </ScrollView>
         </View>
-        {this.state.packages.length > 0 ? 
+        {this.state.packages ? 
       <View style={Style.alignRoute}>
             <View style={{marginBottom: 15}}>
                 <Text>Current Trip (1/{this.state.totTrips})</Text>
@@ -95,9 +143,9 @@ export default class EnRoute extends React.Component{
                       <Image style={Style.routerImg} source={Box} />
                     </View>
                     <View style={Style.routeCardContent2}>
-                      <Text style={Style.nameTXT}>{this.state.packages[0].booking_name}</Text>
-                      <Text style={Style.detailsTXT}>REF: {this.state.packages[0].booking_ref}</Text>
-                      <Text style={Style.detailsTXT}>{this.state.packages[0].do_location}</Text>
+                      <Text style={Style.nameTXT}>{this.state.packages.booking_name}</Text>
+                      <Text style={Style.detailsTXT}>REF: {this.state.packages.booking_ref}</Text>
+                      <Text style={Style.detailsTXT}>{this.state.packages.do_location}</Text>
                     </View>
 
                     <View style={Style.alignRoute}>
@@ -105,10 +153,10 @@ export default class EnRoute extends React.Component{
                         <Text style={{fontSize: 11}}>Message/ Special Instructions/ Packages</Text>
                         <View style={Style.routerText}>
                             <TouchableOpacity style={Style.txtBorder} onPress={()=>{this.setState({showModal: true})}}>
-                            <Text>{this.state.packages[0].instructions}</Text>
+                            <Text>{this.state.packages.instructions}</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={Style.callbtn} onPress={()=>{Linking.openURL(`tel:${this.state.packages[0].cellphone}`)}}>
+                            <TouchableOpacity style={Style.callbtn} onPress={()=>{Linking.openURL(`tel:${this.state.packages.cellphone}`)}}>
                                 <Image style={Style.routerImg2} source={Call} />
                             </TouchableOpacity>
                         </View>
@@ -128,16 +176,16 @@ export default class EnRoute extends React.Component{
         </View>
 
         <Modal visible={this.state.showModal} animationType='slide'>
-        {this.state.packages.length > 0 ? 
+        {this.state.packages ? 
             <View style={Style.body}>
             <View style={Style.routeTxt}>
                 <TouchableOpacity style={Style.backBtn} onPress={()=>{this.setState({showModal: false})}}>
                     <Text>Back</Text>
                 </TouchableOpacity>
-                <Text style={{fontSize: 20}}>{this.state.packages[0].booking_name}</Text>
+                <Text style={{fontSize: 20}}>{this.state.packages.booking_name}</Text>
             </View>
                 <Text style={{textAlign:'center', marginTop: 20}}>Special Instructions</Text>
-                <Text style={{textAlign:'center', marginTop: 20, width:'97%', marginLeft: 5}}>{this.state.packages[0].instructions}</Text>
+                <Text style={{textAlign:'center', marginTop: 20, width:'97%', marginLeft: 5}}>{this.state.packages.instructions}</Text>
             </View>
             :
             <View></View> }
@@ -145,15 +193,16 @@ export default class EnRoute extends React.Component{
 
         <Modal visible={this.state.verifyPinModal} animationType='slide'>
             <View style={Style.body} > 
-            
-            <View  style={{justifyContent:'center', alignContent:'center', alignItems:'center', marginTop: '50%', width: '96%'}}>
-            <Text>Ask Julius for the PIN before you can hand them the package.</Text>
+            {this.state.packages ? 
+            <View  style={{justifyContent:'center', alignContent:'center', alignItems:'center', marginTop: '50%', width: '90%', marginLeft: '5%'}}>
+            <Text>Ask {this.state.packages.booking_name} for the PIN before you can hand them the package.</Text>
             <Text></Text>
-            <Text>REF: 1SLF5H1N4G</Text>
+            <Text>REF: {this.state.packages.order_id}</Text>
             <Text></Text>
-            <TextInput keyboardType='number-pad' style={Style.input} placeholder="Pin" />
+            <TextInput keyboardType='number-pad' value={this.state.pin} onChangeText={(txt) =>{this.setState({pin:txt})}} style={Style.input} placeholder="Pin" />
             </View>
-            
+            :
+            <View></View>}
             <View style={Style.bottomBtn}>
                 <TouchableOpacity style={Style.btn}  onPress={()=>{this.verifyPin()}}>
                     <Text>Verify Pin</Text>
