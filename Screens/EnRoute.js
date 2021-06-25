@@ -1,5 +1,6 @@
 import React from 'react'
 import Style from '../Style/Style';
+import VIForegroundService from '@voximplant/react-native-foreground-service';
 import {View, Text, StatusBar, TouchableOpacity, Image , ScrollView, Modal, TextInput, Alert, Linking, BackHandler} from 'react-native';
 import Box from '../Images/box.png';
 import Call from '../Images/call.png';
@@ -32,10 +33,15 @@ export default class EnRoute extends React.Component{
    }
 
       verifyPin(){
-        console.log(this.state.pin)
-        console.log(this.state.packages.pu_pin)
         if (this.state.packages.pu_pin == this.state.pin){
-          this.setState({verifyPinModal : false, nextTrip : true, packages : this.state.allPackages[0] }, () => this.changePack(this.state.packages.pu_pin))
+          if (this.state.allPackages.length >= 1){
+            this.setState({pin : '', verifyPinModal : false, nextTrip : true, packages : this.state.allPackages[0] }, () => this.changePack(this.state.packages.pu_pin))
+          }else{
+            this.setState({verifyPinModal : false}, () =>{
+              Alert.alert('', 'you have completed all the deliveries');
+              this.props.navigation.popToTop()
+            } )
+          }
         }else{
           Alert.alert('', 'The Pin you have entered is incorrect!');
         }
@@ -49,12 +55,42 @@ export default class EnRoute extends React.Component{
           packages : this.props.route.params.packages[0],
           allPackages : packs,
           totTrips :  packs.length
-        }, () => this.changePack(this.state.packages.pu_pin))
+        }, () => {this.changePack(this.state.packages.pu_pin)
+         this.openMap();
+        })
       }
 
       arrived(){
+        VIForegroundService.stopService();
         this.setState({verifyPinModal : true})
       }
+
+      openMap(){
+        Linking.openURL(`google.navigation:q=${this.state.packages.do_location}`)
+        this.startForegroundService()
+      }
+
+      async startForegroundService() {
+        const channelConfig = {
+          id: 'channelId',
+          name: 'Channel name',
+          description: 'Channel description',
+          enableVibration: false
+      };
+        VIForegroundService.createNotificationChannel(channelConfig);
+        const notificationConfig = {
+          channelId: 'channelId',
+          id: 3456,
+          title: 'Title',
+          text: 'Some text',
+          icon: 'ic_icon'
+      };
+      try {
+          await VIForegroundService.startService(notificationConfig);
+      } catch (e) {
+          console.error(e);
+      }    
+    }
 
       changePack(pin){
         let tmpArr = new Array();
@@ -67,10 +103,11 @@ export default class EnRoute extends React.Component{
             this.setState({
               allPackages : tmpArr
             },  () =>{
-              //this.sendSMS(this.state.packages.cellphone, this.state.packages.pu_pin)
+              this.sendSMS(this.state.packages.cellphone, this.state.packages.pu_pin)
             })
           }  else{
-            Alert.alert('', 'you are done, thank you');
+            Alert.alert('', 'you have completed all the deliveries');
+            this.props.navigation.popToTop()
           }  
       }
 
@@ -99,7 +136,9 @@ export default class EnRoute extends React.Component{
       }
 
       startTrip (){
-        this.setState({nextTrip : false })
+        this.setState({nextTrip : false }, () =>{
+          this.openMap();
+        })
       }
 
   render(){

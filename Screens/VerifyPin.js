@@ -1,7 +1,5 @@
 import React from 'react'
 import Style from '../Style/Style';
-import getDirections from 'react-native-google-maps-directions'
-import VIForegroundService from '@voximplant/react-native-foreground-service';
 import { View, Text, StatusBar, Linking } from 'react-native';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
@@ -32,7 +30,7 @@ export default class VerifyPin extends React.Component{
     }
 
     openMap(){
-     // Linking.openURL(`google.navigation:q=${this.state.destinationCoords}`)
+     Linking.openURL(`google.navigation:q=${this.state.destinationCoords}`)
     } 
 
     checkVerification(){
@@ -55,27 +53,6 @@ export default class VerifyPin extends React.Component{
       })
     }
 
-    async startForegroundService() {
-      const channelConfig = {
-        id: 'channelId',
-        name: 'Channel name',
-        description: 'Channel description',
-        enableVibration: false
-    };
-      VIForegroundService.createNotificationChannel(channelConfig);
-      const notificationConfig = {
-        channelId: 'channelId',
-        id: 3456,
-        title: 'Title',
-        text: 'Some text',
-        icon: 'ic_icon'
-    };
-    try {
-        await VIForegroundService.startService(notificationConfig);
-    } catch (e) {
-        console.error(e);
-    }    
-  }
 
   sendReleaseFrom(){
     let xhr = new XMLHttpRequest();
