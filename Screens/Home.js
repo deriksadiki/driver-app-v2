@@ -225,16 +225,29 @@ setUpdateDriverLocation = async (location, coords) =>{
                   <View></View>
                   }
             </View>
+            {this.state.isEnabled ? 
+            <View>
             <View style={Style.heading}>
               <Text style={Style.nameTXT}>Requests</Text>
               <Text></Text>
             </View>
-
+          
             <View>
               <ScrollView style={{marginBottom: 120}}>
               {requests}
               </ScrollView>
             </View>
+            </View>
+
+            :
+            <View>
+              <View style={{alignContentL:'center', alignItems:'center', marginTop: '60%'}}>
+                <Text>You will not be able to receive requests when you have disabled
+connection to our servers. To receive request, toggle the online switch or click "Reconnect"</Text>
+                </View>
+            </View>
+            }
+
         </View>
     )
   }

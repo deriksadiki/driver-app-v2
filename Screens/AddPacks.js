@@ -1,6 +1,6 @@
 import React from 'react'
 import Style from '../Style/Style';
-import database from '@react-native-firebase/database';
+import database, { firebase } from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import { View, Text, StatusBar, TouchableOpacity, Image , ScrollView, Alert} from 'react-native';
  
@@ -73,7 +73,9 @@ export default class AddPacks extends React.Component{
               tempArr.push(this.state.allPacks[this.state.selectedPacks[x]]);
            }
           if (tempArr.length > 0){
-            this.props.navigation.navigate('enroute', {packages : tempArr});
+            database().ref('apiReq/' +  this.state.packs.parentKey).update({selectedPacks : true}).then(() =>{
+              this.props.navigation.navigate('enroute', {packages : tempArr, key : this.state.packs.parentKey});
+            })
           }else{
             Alert.alert('', 'Please select packs before you can start the delivery')
           }
@@ -99,7 +101,7 @@ export default class AddPacks extends React.Component{
        <View style={Style.addPackstext}>
            <Text>Please ensure that all of the packages can neatly fit in your vehicle. After loading a package, click its reference to fulfill and return the packages that don't fit.</Text>
        </View>
-        <Text style={Style.packsTxt}>Packages (6)</Text>
+        <Text style={Style.packsTxt}>Packages ({this.state.packs.length})</Text>
        <View style={Style.packsBody}>
               <ScrollView style={{marginBottom: 130}}>
               {packs}

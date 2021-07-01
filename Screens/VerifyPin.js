@@ -1,12 +1,13 @@
 import React from 'react'
 import Style from '../Style/Style';
-import { View, Text, StatusBar, Linking } from 'react-native';
+import { View, Text, StatusBar, Linking, BackHandler } from 'react-native';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
  
 export default class VerifyPin extends React.Component{
   constructor(){
     super()
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       pin : '',
       pack : null
@@ -14,11 +15,13 @@ export default class VerifyPin extends React.Component{
   }
 
     componentDidMount(){
+      BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
         let val = this.props.route.params.pack;
         console.log(val.pu_coords)
         this.setState({
           pack : val,
           pin : val.pin,
+          id : val.id,
           coords : this.props.route.params.location,
           destinationCoords: val.pu_coords,
           driverObject : this.props.route.params.driverObject
@@ -28,6 +31,15 @@ export default class VerifyPin extends React.Component{
           this.openMap();
         })
     }
+
+
+    UNSAFE_componentWillMount() {
+      BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+
+  handleBackButtonClick() {
+    BackHandler.exitApp();
+ }
 
     openMap(){
      Linking.openURL(`google.navigation:q=${this.state.destinationCoords}`)
@@ -83,7 +95,8 @@ export default class VerifyPin extends React.Component{
       <View style={Style.body}>
           <StatusBar backgroundColor="black" />
           <View style={Style.pinMainBody}>
-              <Text style={{fontSize:17, fontWeight:'900', marginBottom: 10, marginTop: 8}}>Arrived</Text>
+              <Text style={{fontSize:17, fontWeight:'900', marginBottom: 10, marginTop: 8}}>Pack ID: {this.state.id}</Text>
+              <Text></Text>
               <Text>Please stay safe and wear your mask. <Text></Text>
               <Text >Keep a safe social distance and don't forget to provide service with a smile even if your clients can't see it.</Text>
               </Text>

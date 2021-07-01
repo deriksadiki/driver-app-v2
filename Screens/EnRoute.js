@@ -104,6 +104,7 @@ export default class EnRoute extends React.Component{
               allPackages : tmpArr
             },  () =>{
               this.sendSMS(this.state.packages.cellphone, this.state.packages.pu_pin)
+              this.sendPin(this.state.packages.pu_pin, this.state.packages.booking_email, this.state.packages.booking_name)
             })
           }  else{
             Alert.alert('', 'you have completed all the deliveries');
@@ -114,10 +115,17 @@ export default class EnRoute extends React.Component{
       sendSMS(cellphone, pin){
         var body = `Thank you for using Zipi Delivery. Zipi PIN: ${pin}. Please present it to your driver.`;
         var sms = `https://us-central1-zipi-app.cloudfunctions.net/sendSms?cellphone=${cellphone.replace("0","27")}&message=${body}`;
-       // axios.get(sms).then((data) =>{
-        //   console.log('sent)
-        // })
+       axios.get(sms).then((data) =>{
+          console.log('sent')
+        })
       }
+
+      sendPin(pin, email, name){
+        var url = `https://zipi.co.za/ZLpin.php?name=${name}&email=${email}&pin=${pin}`;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.send();
+    }
 
       return(){
         Alert.alert(
