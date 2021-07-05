@@ -14,6 +14,7 @@ export default class AddPacks extends React.Component{
           allPacks : [],
           selectedPacks : [],
           packsArray : [],
+          packs : []
         }
       }
 
@@ -28,11 +29,17 @@ export default class AddPacks extends React.Component{
     }
 
     getPacks(key){
+      var today = new Date();
+      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      var dateTime = date+' '+time;
           database().ref('newReq/' + key).once('value', data =>{
             let details = data.val();
             details.key = key
+            details.pickup_date = dateTime
             tempArr.push(details);
           }).then(() =>{
+            database().ref('newReq/' + key).update({pickup_date : dateTime})
             counter++;
             if (counter === this.state.packsKeys.length){
               this.pushPacks(tempArr)
@@ -101,7 +108,7 @@ export default class AddPacks extends React.Component{
        <View style={Style.addPackstext}>
            <Text>Please ensure that all of the packages can neatly fit in your vehicle. After loading a package, click its reference to fulfill and return the packages that don't fit.</Text>
        </View>
-        <Text style={Style.packsTxt}>Packages ({this.state.packs.length})</Text>
+        <Text style={Style.packsTxt}>Packages ({this.state.allPacks.length})</Text>
        <View style={Style.packsBody}>
               <ScrollView style={{marginBottom: 130}}>
               {packs}

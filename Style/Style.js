@@ -263,7 +263,7 @@ export default styles =  StyleSheet.create({
 
   input:{
     width: width * 0.8,
-    height: 38,
+    height: height * 0.07,
     borderWidth: .5,
   },
 

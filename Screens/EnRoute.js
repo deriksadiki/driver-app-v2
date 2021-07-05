@@ -6,6 +6,8 @@ import Box from '../Images/box.png';
 import Call from '../Images/call.png';
 import Loc from '../Images/loc.png'
 import axios from 'axios';
+import auth from '@react-native-firebase/auth'
+import database from '@react-native-firebase/database'
  
 export default class EnRoute extends React.Component{
 
@@ -20,7 +22,11 @@ export default class EnRoute extends React.Component{
           showModal : false,
           verifyPinModal : false,
           nextTrip : false,
-          pin : ''
+          pin : '',
+          driverId: "",
+            plate: "",
+            mode: "",
+            name: "",
         }
       }
 
@@ -35,9 +41,11 @@ export default class EnRoute extends React.Component{
       verifyPin(){
         if (this.state.packages.pu_pin == this.state.pin){
           if (this.state.allPackages.length >= 1){
+            this.sendReceipt(this.state.packages)
             this.setState({pin : '', verifyPinModal : false, nextTrip : true, packages : this.state.allPackages[0] }, () => this.changePack(this.state.packages.pu_pin))
           }else{
             this.setState({verifyPinModal : false}, () =>{
+              this.sendReceipt(this.state.packages)
               Alert.alert('', 'you have completed all the deliveries');
               this.props.navigation.popToTop()
             } )
@@ -48,7 +56,24 @@ export default class EnRoute extends React.Component{
           
       }
 
+      getDriverData(){
+        var driverUid = auth().currentUser.uid;
+        database().ref("drivers/"+driverUid).once("value", data => {
+            var thisDriver = data.val();
+            console.log(thisDriver);
+            var fname = thisDriver.firstName;
+            var surname = thisDriver.surname;
+            var name = `${fname} ${surname}`;
+            var mode = thisDriver.mode;
+            var plate = thisDriver.plateNum;
+            this.setState({plate: plate});
+            this.setState({mode: mode});
+            this.setState({name: name, driverId : driverUid});
+        })
+    }
+
       componentDidMount(){
+        this.getDriverData();
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
         let packs = this.props.route.params.packages
         this.setState({
@@ -56,7 +81,7 @@ export default class EnRoute extends React.Component{
           allPackages : packs,
           totTrips :  packs.length
         }, () => {this.changePack(this.state.packages.pu_pin)
-         this.openMap();
+          this.openMap();
         })
       }
 
@@ -148,6 +173,41 @@ export default class EnRoute extends React.Component{
           this.openMap();
         })
       }
+
+      sendReceipt(data){
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date+' '+time;
+        var x = data;
+        var email = "nelo@landsea-shipping.co.za";
+        var xhr = new XMLHttpRequest();
+        var url = 'https://zipi.co.za/ZLreceipt.php?';
+        this.sendSecInvoice(x);
+        var params = `distance=${x.distance}&username=${x.booking_name}&pick_time=${x.pickup_date.split(' ')[1]}&dropTime=${dateTime}&numPlate=${this.state.plate}&vehicle=${this.state.mode}&email=${email}&total=${x.amount}&pu_address=${x.pu_location.replace(', South Africa', '')}&do_address=${x.do_location.replace(', South Africa', '')}&ref=${x.booking_ref}&name=${this.state.name}&date=${x.date.split(' ')[0]}&duration=${x.eta}&distance=${x.distance}&time=${x.date.split(' ')[1]}`;
+        xhr.open('GET', `${url}${params}`, true)
+        xhr.onreadystatechange = () =>{
+              if ( xhr.status == '200'){
+                  let resp = xhr.responseText;
+                  console.log('sent', resp);
+              }
+          }
+        xhr.send();
+    }
+
+    sendSecInvoice(list){
+      let xhr = new XMLHttpRequest()
+      let url = "https://zipi.co.za/Driver_Invoice.php?";
+      let body = `id=${this.state.driverId}&name=${this.state.name}&no=${list.booking_ref}&date=${list.date}&pu=${list.pu_location.replace(', South Africa', '')}&do=${list.do_location.replace(', South Africa', '')}&reg=${this.state.plate}&mode=${this.state.mode}&duration=${list.eta}&distance=${list.distance}&amount=${parseInt(66.50)}&vat=${parseInt(66.50) * 0.15}&total=${ parseInt(66.50) + parseInt(66.50 * 0.15)}`;
+      xhr.open('GET', `${url}${body}`, true)
+      xhr.onreadystatechange = () =>{
+          if ( xhr.status == '200'){
+              let resp = xhr.responseText;
+              console.log('sent invoice')
+          }
+      }
+      xhr.send();
+  }
 
   render(){
 

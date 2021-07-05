@@ -12,7 +12,7 @@ export default class Home extends React.Component{
   constructor(){
     super()
     this.state = {
-      isEnabled : false,
+      isEnabled : true ,
       text: 'Offline',
       reqArray : [],
       current_location : '',
@@ -190,6 +190,10 @@ setUpdateDriverLocation = async (location, coords) =>{
                   <View style={Style.cardContent2}>
                     <Text style={Style.nameTXT}> {val.id}</Text>
                     <Text style={Style.detailsTXT}> {val.distance}km</Text>
+                    <View style={{marginLeft: '70%', marginTop: -35}}>
+                    <Text style={Style.nameTXT}>Parcels: {val.reqKeys.length}</Text>
+                    </View>
+                    
                   </View>
               </TouchableOpacity>
       )
