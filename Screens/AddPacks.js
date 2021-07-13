@@ -33,13 +33,15 @@ export default class AddPacks extends React.Component{
       var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
       var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
       var dateTime = date+' '+time;
+      let pinx =Math.floor(Math.random(100000000 - 100) * 100000000);
           database().ref('newReq/' + key).once('value', data =>{
             let details = data.val();
             details.key = key
             details.pickup_date = dateTime
+            details.returnPin = pinx
             tempArr.push(details);
           }).then(() =>{
-            database().ref('newReq/' + key).update({pickup_date : dateTime})
+            database().ref('newReq/' + key).update({pickup_date : dateTime, returnPin: pinx})
             counter++;
             if (counter === this.state.packsKeys.length){
               this.pushPacks(tempArr)

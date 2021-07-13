@@ -153,6 +153,7 @@ export default class EnRoute extends React.Component{
     }
 
       return(){
+        VIForegroundService.stopService();
         Alert.alert(
             '',
             'Are you sure you want to return this package?',
@@ -162,7 +163,15 @@ export default class EnRoute extends React.Component{
                 onPress: () => console.log('Cancel Pressed'),
                 style: 'cancel'
               },
-              { text: 'OK', onPress: () => console.log('ok pressed')}
+              { text: 'OK', onPress: () => {
+                if (this.state.allPackages.length >= 1){
+                  this.setState({pin : '', nextTrip : true, packages : this.state.allPackages[0] }, () => this.changePack(this.state.packages.pu_pin))
+                }else{
+                  Linking.openURL(`google.navigation:q=${this.state.packages.pu_location}`)
+                  this.startForegroundService()
+                }
+                this.sendReturnPin()
+              }}
             ],
             { cancelable: false }
           );
@@ -207,6 +216,13 @@ export default class EnRoute extends React.Component{
           }
       }
       xhr.send();
+  }
+
+  sendReturnPin(){
+    var url = `https://zipi.co.za/returnPin.php?name=${this.state.packages.booking_name}&email=${this.state.packages.booking_email}&pin=${this.state.packages.returnPin}`;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.send();
   }
 
   render(){

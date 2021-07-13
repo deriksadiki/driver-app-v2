@@ -5,6 +5,7 @@ import Box from '../Images/box.png';
 import Geolocation from 'react-native-geolocation-service';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 
  let counter = 0;
  let tempArray = new Array();
@@ -12,22 +13,35 @@ export default class Home extends React.Component{
   constructor(){
     super()
     this.state = {
-      isEnabled : true ,
       text: 'Offline',
       reqArray : [],
       current_location : '',
       current_coords : null, 
-      driverObject : null
+      driverObject : null,
+      phoneId: '', 
+      availability : null,
+      isEnabled : null
     }
   }
 
   changeStatus(){
     if (!this.state.isEnabled){
-      this.setState({isEnabled : true, text: 'Online'})
+      this.setState({availability : 'available', text: 'Online', isEnabled : true}, ()=> 
+      this.setDriverStatus('available') 
+      )
     }else{
-      this.setState({isEnabled : false, text: 'Offline'})
+      this.setState({availability : 'unavailable', text: 'Offline', isEnabled : false}, this.setDriverStatus('unavailable'))
     }
   }
+
+
+  setDriverStatus (status) {
+    var user = auth().currentUser;
+      database().ref(this.state.driverObject.mode + '/' + user.uid).update({
+      status: status
+    })
+     database().ref('drivers/' +  user.uid).update({availability:status})
+}
 
   selectReq(val){
     this.props.navigation.navigate('verify', {pack : val, location: this.state.current_coords, driverObject: this.state.driverObject});
@@ -41,8 +55,32 @@ export default class Home extends React.Component{
   getDriverDetails(){
     let user = auth().currentUser;
     database().ref('drivers/' + user.uid).once('value', data =>{
-      this.setState({driverObject : data.val()})
+      let temp = false
+      let btnState = false;
+      if (data.val().availability != null || data.val().availability != undefined){
+        temp = data.val().availability
+    }
+    if (temp == 'available'){
+      btnState = true
+    }
+      this.setState({driverObject : data.val(), availability : temp, isEnabled : btnState}, () => this.getTocken())
     })
+  }
+
+  getTocken(){
+    console.log(this.state.availability)
+    messaging()
+    .getToken()
+    .then(token => {
+      this.setState({
+        phoneId: token
+      }, ()=>{
+        let user = auth().currentUser;
+        database().ref(this.state.driverObject.mode + '/' + user.uid).update({
+          phoneId : this.state.phoneId,
+        })
+      })
+    });
   }
 
   checkPacksSelection(){ 
@@ -141,44 +179,44 @@ pushPacks(tempArr){
  }
 
  async getAddress(coords){
-  // const key = 'AIzaSyDDMIizZ49AcXojEeG1Qmckb-uduyvX6hY';
-  // const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+coords+'&key='+key;
-  // const xhr = new XMLHttpRequest();
-  // xhr.open('GET', url, true);
-  // xhr.responseType = 'json';
-  // xhr.onreadystatechange=()=>{
-  //     if(xhr.readyState == '4'){
-  //         const json = xhr.response;
-  //         let loc = json.results[0].formatted_address;
-  //         let temp = json.results[0].address_components;
-  //         for (var x = 0; x < temp.length; x++){
-  //            let temp2 = temp[x].types;
-  //            for (var i = 0; i < temp2.length; i++){
-  //                if (temp2[i] == "administrative_area_level_2"){
-  //                    loc = loc.replace('South Africa', temp[x].short_name)
-  //                    this.setUpdateDriverLocation(loc, coords)
-  //                    break;
-  //                }
-  //            }
-  //         }
-  //     }
-  // }
-  // await xhr.send();
+  const key = 'AIzaSyDDMIizZ49AcXojEeG1Qmckb-uduyvX6hY';
+  const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+coords+'&key='+key;
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.responseType = 'json';
+  xhr.onreadystatechange=()=>{
+      if(xhr.readyState == '4'){
+          const json = xhr.response;
+          let loc = json.results[0].formatted_address;
+          let temp = json.results[0].address_components;
+          for (var x = 0; x < temp.length; x++){
+             let temp2 = temp[x].types;
+             for (var i = 0; i < temp2.length; i++){
+                 if (temp2[i] == "administrative_area_level_2"){
+                     loc = loc.replace('South Africa', temp[x].short_name)
+                     this.setUpdateDriverLocation(loc, coords)
+                     break;
+                 }
+             }
+          }
+      }
+  }
+  await xhr.send();
 }
-
 
 setUpdateDriverLocation = async (location, coords) =>{
-      this.setState({
-          current_location : location
-      })
-       database().ref(this.state.modeType + '/' + this.state.driverID).update({
-        location:location,
-        coords: coords,
-        name : this.state.name + ' ' + this.state.surname,
-        cell : this.state.phone,
-        vehicle : this.state.modeType
-      })
+  let user = auth().currentUser;
+  console.log(this.state.driverObject.availability)
+  database().ref(this.state.driverObject.mode + '/' + user.uid).update({
+    location:location,
+    coords: coords,
+    name : this.state.driverObject.firstName + ' ' + this.state.driverObject.surname,
+    cell : this.state.driverObject.phone,
+    vehicle : this.state.driverObject.mode,
+    status : this.state.availability
+  })
 }
+
 
   render(){
     const requests = this.state.reqArray.map((val, indx) =>{
@@ -247,7 +285,7 @@ setUpdateDriverLocation = async (location, coords) =>{
             <View>
               <View style={{alignContentL:'center', alignItems:'center', marginTop: '60%'}}>
                 <Text>You will not be able to receive requests when you have disabled
-connection to our servers. To receive request, toggle the online switch or click "Reconnect"</Text>
+ connection to our servers. To receive request, toggle the online switch or click "Reconnect"</Text>
                 </View>
             </View>
             }
