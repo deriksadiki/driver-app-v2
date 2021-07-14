@@ -46,8 +46,8 @@ export default class VerifyPin extends React.Component{
     } 
 
     checkVerification(){
-      database().ref('apiReq/' + this.state.pack.parentKey).on('value', data =>{
-        let details = data.val();
+      database().ref('apiReq/' + this.state.pack.parentKey).once('value', data =>{
+      let details = data.val();
         if (details.verified){
           this.props.navigation.navigate('addPacks', {driverObject: this.state.driverObject, packs : this.state.pack});
         }

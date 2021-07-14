@@ -41,19 +41,39 @@ export default class EnRoute extends React.Component{
       verifyPin(){
         if (this.state.packages.pu_pin == this.state.pin){
           if (this.state.allPackages.length >= 1){
+            database().ref('newReq/' + this.state.packages.key).remove().then(() =>{
             this.sendReceipt(this.state.packages)
+            this.removeKey(this.state.packages.mainKey, this.state.packages.key)
             this.setState({pin : '', verifyPinModal : false, nextTrip : true, packages : this.state.allPackages[0] }, () => this.changePack(this.state.packages.pu_pin))
+            })
           }else{
+            database().ref('newReq/' + this.state.packages.key).remove().then(() =>{
             this.setState({verifyPinModal : false}, () =>{
               this.sendReceipt(this.state.packages)
-              Alert.alert('', 'you have completed all the deliveries');
-              this.props.navigation.popToTop()
+              database().ref('apiReq/' + this.state.packages.mainKey).remove().then(() =>{
+                Alert.alert('', 'you have completed all the deliveries');
+                this.props.navigation.popToTop()
+              })
             } )
+          })
           }
         }else{
           Alert.alert('', 'The Pin you have entered is incorrect!');
         }
-          
+      }
+
+      removeKey(key, childKey){
+        let tempArr = new Array();
+        database().ref('apiReq/' + key).once('value', data =>{
+        let reqKeys = data.val().reqKeys;
+          for (var x = 0; x < reqKeys.length; x++){
+            if (reqKeys[x] != childKey){
+              tempArr.push(reqKeys[x]);
+            }
+          }
+        }).then(() =>{
+          database().ref('apiReq/' + key).update({reqKeys : tempArr});
+        })
       }
 
       getDriverData(){
@@ -81,6 +101,7 @@ export default class EnRoute extends React.Component{
           allPackages : packs,
           totTrips :  packs.length
         }, () => {this.changePack(this.state.packages.pu_pin)
+          console.log(this.state.packages)
           this.openMap();
         })
       }
@@ -149,7 +170,7 @@ export default class EnRoute extends React.Component{
         var url = `https://zipi.co.za/ZLpin.php?name=${name}&email=${email}&pin=${pin}`;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
-        xhr.send();
+      xhr.send();
     }
 
       return(){

@@ -39,6 +39,7 @@ export default class AddPacks extends React.Component{
             details.key = key
             details.pickup_date = dateTime
             details.returnPin = pinx
+            details.mainKey = this.state.packs.parentKey;
             tempArr.push(details);
           }).then(() =>{
             database().ref('newReq/' + key).update({pickup_date : dateTime, returnPin: pinx})

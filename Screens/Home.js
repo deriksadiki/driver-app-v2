@@ -273,14 +273,18 @@ setUpdateDriverLocation = async (location, coords) =>{
               <Text style={Style.nameTXT}>Requests</Text>
               <Text></Text>
             </View>
-          
+          {this.state.reqArray.length > 0 ?
             <View>
               <ScrollView style={{marginBottom: 120}}>
               {requests}
               </ScrollView>
             </View>
+            :
+            <View style={{alignContentL:'center', alignItems:'center', marginTop: '60%'}}>
+            <Text>There are no available requests at the moment</Text>
             </View>
-
+          }
+            </View>
             :
             <View>
               <View style={{alignContentL:'center', alignItems:'center', marginTop: '60%'}}>
