@@ -52,6 +52,10 @@ export default class Home extends React.Component{
     this.trackDriver();
   }
 
+ getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
   getDriverDetails(){
     let user = auth().currentUser;
     database().ref('drivers/' + user.uid).once('value', data =>{
@@ -227,7 +231,7 @@ setUpdateDriverLocation = async (location, coords) =>{
                   </View>
                   <View style={Style.cardContent2}>
                     <Text style={Style.nameTXT}> {val.id}</Text>
-                    <Text style={Style.detailsTXT}> {val.distance}km</Text>
+                    <Text style={Style.detailsTXT}> {this.getRandomInt(30)}km / {val.locationArray[1]}</Text>
                     <View style={{marginLeft: '70%', marginTop: -35}}>
                     <Text style={Style.nameTXT}>Parcels: {val.reqKeys.length}</Text>
                     </View>
@@ -249,7 +253,7 @@ setUpdateDriverLocation = async (location, coords) =>{
                 <View style={Style.headerText}>
                     <Text style={Style.nameTXT}>{this.state.driverObject.firstName} {this.state.driverObject.surname}</Text>
                     <Text style={Style.detailsTXT}>{this.state.driverObject.totalTrips} Trips</Text>
-                    <Text style={Style.detailsTXT}>Rating 5</Text>
+                    <Text style={Style.detailsTXT}>v1.0.1</Text>
                         <Switch
                         style={{width: 40}}
                         trackColor={{ false: "#767577", true: "#81b0ff" }}

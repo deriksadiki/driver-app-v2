@@ -291,7 +291,7 @@ export default styles =  StyleSheet.create({
 
   loginBody :{
     width: width,
-    height : height * 0.65,
+    height : height * 0.55,
     backgroundColor: '#FFFFFF',
     borderBottomLeftRadius: 30,
     borderBottomEndRadius: 30
@@ -310,12 +310,12 @@ export default styles =  StyleSheet.create({
 
   alignLogin :{
     marginLeft: width * 0.05,
-    marginTop: height * 0.4
+    marginTop: height * 0.3
   },
 
   loginAlignBtn :{
       flexDirection:'row',
-      marginTop: 30,
+      marginTop: 35,
       marginLeft: 20
   },
 
@@ -337,7 +337,7 @@ export default styles =  StyleSheet.create({
   loginImg :{
       position:'absolute',
       marginLeft: width * 0.3,
-      marginTop: -height * 0.22
+      marginTop: -height * 0.17
   }
 
 })

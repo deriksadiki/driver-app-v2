@@ -4,7 +4,7 @@ import VIForegroundService from '@voximplant/react-native-foreground-service';
 import {View, Text, StatusBar, TouchableOpacity, Image , ScrollView, Modal, TextInput, Alert, Linking, BackHandler} from 'react-native';
 import Box from '../Images/box.png';
 import Call from '../Images/call.png';
-import Loc from '../Images/loc.png'
+import Loc from '../Images/done.png'
 import axios from 'axios';
 import auth from '@react-native-firebase/auth'
 import database from '@react-native-firebase/database'
@@ -170,7 +170,7 @@ export default class EnRoute extends React.Component{
         var url = `https://zipi.co.za/ZLpin.php?name=${name}&email=${email}&pin=${pin}`;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
-      xhr.send();
+     xhr.send();
     }
 
       return(){
@@ -289,7 +289,7 @@ export default class EnRoute extends React.Component{
                     <View style={Style.routeCardContent2}>
                       <Text style={Style.nameTXT}>{this.state.packages.booking_name}</Text>
                       <Text style={Style.detailsTXT}>REF: {this.state.packages.booking_ref}</Text>
-                      <Text style={Style.detailsTXT}>{this.state.packages.do_location}</Text>
+                      <Text style={Style.detailsTXT}>{this.state.packages.do_location.split(',')[0] + ',' + this.state.packages.do_location.split(',')[1]}</Text>
                     </View>
 
                     <View style={Style.alignRoute}>
@@ -343,7 +343,7 @@ export default class EnRoute extends React.Component{
             <Text></Text>
             <Text>REF: {this.state.packages.order_id}</Text>
             <Text></Text>
-            <TextInput keyboardType='number-pad' value={this.state.pin} onChangeText={(txt) =>{this.setState({pin:txt})}} style={Style.input} placeholder="Pin" />
+            <TextInput keyboardType='number-pad' textAlign={'center'} value={this.state.pin} onChangeText={(txt) =>{this.setState({pin:txt})}} style={Style.input} placeholder="Pin" />
             </View>
             :
             <View></View>}
@@ -360,7 +360,7 @@ export default class EnRoute extends React.Component{
 
           <View style={Style.nextTrip}>
             <View style={Style.alignPinItems}>
-                <Image style={Style.routerImg} source={Box} />
+                <Image style={Style.routerImg} source={Loc} />
               <Text style={{fontSize: 17, marginBottom: 10, marginTop: 10}}>Pin Approved</Text>
               <Text>Click "Next trip" when you're ready for the next trip</Text>
             </View>
