@@ -72,7 +72,6 @@ export default class Home extends React.Component{
   }
 
   getTocken(){
-    console.log(this.state.availability)
     messaging()
     .getToken()
     .then(token => {
@@ -210,7 +209,6 @@ pushPacks(tempArr){
 
 setUpdateDriverLocation = async (location, coords) =>{
   let user = auth().currentUser;
-  console.log(this.state.driverObject.availability)
   database().ref(this.state.driverObject.mode + '/' + user.uid).update({
     location:location,
     coords: coords,
@@ -253,7 +251,7 @@ setUpdateDriverLocation = async (location, coords) =>{
                 <View style={Style.headerText}>
                     <Text style={Style.nameTXT}>{this.state.driverObject.firstName} {this.state.driverObject.surname}</Text>
                     <Text style={Style.detailsTXT}>{this.state.driverObject.totalTrips} Trips</Text>
-                    <Text style={Style.detailsTXT}>v1.0.1</Text>
+                    <Text style={Style.detailsTXT}>v1.0.2</Text>
                         <Switch
                         style={{width: 40}}
                         trackColor={{ false: "#767577", true: "#81b0ff" }}

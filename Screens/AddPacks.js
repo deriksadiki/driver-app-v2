@@ -24,6 +24,7 @@ export default class AddPacks extends React.Component{
           driverObject : this.props.route.params.driverObject,
           packsKeys : this.props.route.params.packs.reqKeys
         }, ()=>{
+          console.log(this.state.packs)
           this.getPacks(this.state.packsKeys[counter]);
         })
     }
@@ -76,6 +77,47 @@ export default class AddPacks extends React.Component{
               this.setState({selectedPacks: tempArr})
           }
       }
+
+      returnPackages(){
+        let tempArray = new Array();
+        let selectedArr = new Array();
+        for (var x = 0; x < this.state.allPacks.length; x++){
+          let foundState = false;
+          for (var i = 0; i < this.state.selectedPacks.length; i++){
+              if (x === this.state.selectedPacks[i]){
+                foundState = true;
+              }
+          }
+          if (!foundState){
+            tempArray.push(this.state.allPacks[x].key)
+          }else{
+            selectedArr.push(this.state.allPacks[x].key)
+          }
+        }
+        if (tempArray.length > 0){
+          database().ref("apiReq/" + this.state.packs.parentKey).update({reqKeys : selectedArr}).then(() =>{
+            this.handleLeftOvers(tempArray)
+          })
+        }else{
+          this.startTrip()
+        }
+      }
+    
+      handleLeftOvers(arr){
+        database().ref("apiReq/").push({
+          locationArray: this.state.packs.locationArray,
+          reqKeys: arr,
+          packagesNumber: arr.length,
+          distance: 20,
+          pu_coords: this.state.packs.locationArray.pu_coords,
+          verified: false,
+          pin: Math.floor(Math.random(100000000 - 100) * 100000000),
+          id: Math.floor(Math.random(100000000 - 100) * 100000000),
+          selected: false,
+        }).then(() =>{
+           this.startTrip()
+        })
+      }
     
       startTrip(){
           let tempArr =  new Array();
@@ -119,7 +161,7 @@ export default class AddPacks extends React.Component{
         </View>
 
         <View style={Style.bottomBtn}>
-                <TouchableOpacity style={Style.btn} onPress={()=>{this.startTrip()}}>
+                <TouchableOpacity style={Style.btn} onPress={()=>{this.returnPackages()}}>
                     <Text>Start</Text>
                 </TouchableOpacity>
         </View>

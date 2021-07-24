@@ -55,7 +55,7 @@ export default class VerifyPin extends React.Component{
     }
 
     checkFormSelection(){
-      database().ref('apiReq/' + this.state.pack.parentKey).once('value', data =>{
+      database().ref('apiReq/' + this.state.pack.parentKey).on('value', data =>{
         let details = data.val();
         if (!details.selected){
           database().ref('apiReq/' + this.state.pack.parentKey).update({selected: true, driverId : auth().currentUser.uid, selectedPacks : false}).then(() =>{
