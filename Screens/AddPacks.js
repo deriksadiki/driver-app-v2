@@ -30,6 +30,7 @@ export default class AddPacks extends React.Component{
     }
 
     getPacks(key){
+      
       var today = new Date();
       var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
       var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -41,9 +42,16 @@ export default class AddPacks extends React.Component{
             details.pickup_date = dateTime
             details.returnPin = pinx
             details.mainKey = this.state.packs.parentKey;
+            details.returnPackage = false;
             tempArr.push(details);
           }).then(() =>{
-            database().ref('newReq/' + key).update({pickup_date : dateTime, returnPin: pinx})
+            database()
+              .ref('newReq/' + key)
+              .update({
+                pickup_date: dateTime,
+                returnPin: pinx,
+                returnPackage: false,
+              });
             counter++;
             if (counter === this.state.packsKeys.length){
               this.pushPacks(tempArr)
