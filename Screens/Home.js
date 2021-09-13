@@ -251,7 +251,7 @@ setUpdateDriverLocation = async (location, coords) =>{
                 <View style={Style.headerText}>
                     <Text style={Style.nameTXT}>{this.state.driverObject.firstName} {this.state.driverObject.surname}</Text>
                     <Text style={Style.detailsTXT}>{this.state.driverObject.totalTrips} Trips</Text>
-                    <Text style={Style.detailsTXT}>v1.0.4</Text>
+                    <Text style={Style.detailsTXT}>v1.0.5</Text>
                         <Switch
                         style={{width: 40}}
                         trackColor={{ false: "#767577", true: "#81b0ff" }}

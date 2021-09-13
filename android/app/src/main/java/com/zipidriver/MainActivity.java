@@ -1,4 +1,4 @@
-package com.zipidriver;
+package com.zipidrivers;
 
 import com.facebook.react.ReactActivity;
 
