@@ -76,7 +76,7 @@ export default class VerifyPin extends React.Component{
     var parentKey = this.state.pack.parentKey;
     let name = this.state.driverObject.firstName + " " + this.state.driverObject.surname
     let car = this.state.driverObject.make + ' ' + this.state.driverObject.model;
-    let url = 'https://zipi.co.za/p54_release.php?';
+    let url = 'https://developer.zipi.co.za/p54_release.php?';
     let p54email = "derik@landsea-shipping.co.za";
     let params  = `address=${p54email}&time=${time}&date=${date}&driver_name=${name}&driver_car=${car}&plate=${plate}&deliveryId=${deliveryId}&parentKey=${parentKey}`;
     xhr.open('GET', `${url}${params}`, true)

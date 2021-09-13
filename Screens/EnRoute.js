@@ -277,7 +277,7 @@ export default class EnRoute extends React.Component {
   }
 
   sendPin(pin, email, name) {
-    var url = `https://zipi.co.za/ZLpin.php?name=${name}&email=${email}&pin=${pin}`;
+    var url = `https://developer.zipi.co.za/ZLpin.php?name=${name}&email=${email}&pin=${pin}`;
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.send();
@@ -355,7 +355,7 @@ export default class EnRoute extends React.Component {
     var x = data;
     var email = 'nelo@landsea-shipping.co.za';
     var xhr = new XMLHttpRequest();
-    var url = 'https://zipi.co.za/ZLreceipt.php?';
+    var url = 'https://developer.zipi.co.za/ZLreceipt.php?';
     this.sendSecInvoice(x);
     var params = `distance=${x.distance}&username=${x.booking_name}&pick_time=${
       x.pickup_date.split(' ')[1]
@@ -381,7 +381,7 @@ export default class EnRoute extends React.Component {
 
   sendSecInvoice(list) {
     let xhr = new XMLHttpRequest();
-    let url = 'https://zipi.co.za/Driver_Invoice.php?';
+    let url = 'https://developer.zipi.co.za/Driver_Invoice.php?';
     let body = `id=${this.state.driverId}&name=${this.state.name}&no=${
       list.booking_ref
     }&date=${list.date}&pu=${list.pu_location.replace(
@@ -405,7 +405,7 @@ export default class EnRoute extends React.Component {
   }
 
   sendReturnPin() {
-    var url = `https://zipi.co.za/returnPin.php?name=${this.state.packages.booking_name}&email=${this.state.packages.booking_email}&pin=${this.state.packages.returnPin}`;
+    var url = `https://developer.zipi.co.za/returnPin.php?name=${this.state.packages.booking_name}&email=${this.state.packages.booking_email}&pin=${this.state.packages.returnPin}`;
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.send();
