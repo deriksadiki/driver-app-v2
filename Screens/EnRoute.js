@@ -39,7 +39,7 @@ export default class EnRoute extends React.Component {
       mode: '',
       name: '',
       returnArray: [],
-      returnState : false
+      returnState: false,
     };
   }
 
@@ -86,12 +86,12 @@ export default class EnRoute extends React.Component {
             .remove()
             .then(() => {
               this.sendReceipt(this.state.packages);
-                this.removeKey(
-                  this.state.packages.mainKey,
-                  this.state.packages.key,
-                );
-                let tempArray = this.state.returnArray[0];
-                tempArray.returnPackage = true;
+              this.removeKey(
+                this.state.packages.mainKey,
+                this.state.packages.key,
+              );
+              let tempArray = this.state.returnArray[0];
+              tempArray.returnPackage = true;
               this.setState(
                 {
                   allPackages: this.state.returnArray,
@@ -99,7 +99,7 @@ export default class EnRoute extends React.Component {
                   returnArray: [],
                   pin: '',
                   verifyPinModal: false,
-                  returnState: true
+                  returnState: true,
                 },
                 () => {
                   this.changePack(this.state.packages.pu_pin);
@@ -300,7 +300,7 @@ export default class EnRoute extends React.Component {
             if (this.state.allPackages.length >= 1) {
               let tempArr = this.state.returnArray;
               tempArr.push(this.state.packages);
-              tempArr.returnPackage =  true;
+              tempArr.returnPackage = true;
               this.setState(
                 {
                   returnArray: tempArr,
@@ -361,7 +361,9 @@ export default class EnRoute extends React.Component {
       x.pickup_date.split(' ')[1]
     }&dropTime=${dateTime}&numPlate=${this.state.plate}&vehicle=${
       this.state.mode
-    }&email=${email}&total=${x.amount}&pu_address=${x.pu_location.replace(
+    }&email=${x.booking_email}&total=${
+      x.amount
+    }&pu_address=${x.pu_location.replace(
       ', South Africa',
       '',
     )}&do_address=${x.do_location.replace(', South Africa', '')}&ref=${

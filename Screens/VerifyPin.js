@@ -3,6 +3,7 @@ import Style from '../Style/Style';
 import {View, Text, StatusBar, Linking, BackHandler} from 'react-native';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import axios from 'axios';
 
 export default class VerifyPin extends React.Component {
   constructor() {
@@ -20,7 +21,7 @@ export default class VerifyPin extends React.Component {
       this.handleBackButtonClick,
     );
     let val = this.props.route.params.pack;
-    console.log(val.pu_coords);
+    //console.log(val);
     this.setState(
       {
         pack: val,
@@ -83,13 +84,24 @@ export default class VerifyPin extends React.Component {
               selectedPacks: false,
             })
             .then(() => {
-              this.sendReleaseFrom();
+              this.getTripDetails(details.reqKeys);
             });
         }
       });
   }
 
-  sendReleaseFrom() {
+  getTripDetails(key) {
+    console.log();
+    database()
+      .ref('newReq/' + key[0])
+      .once('value', data => {
+        this.sendReleaseFrom(data.val().booking_email);
+        this.sendSMS(data.val().cellphone);
+      });
+    //this.sendReleaseFrom();
+  }
+
+  sendReleaseFrom(email) {
     let xhr = new XMLHttpRequest();
     var today = new Date();
     var date =
@@ -109,7 +121,7 @@ export default class VerifyPin extends React.Component {
       this.state.driverObject.make + ' ' + this.state.driverObject.model;
     let url = 'https://developer.zipi.co.za/p54_release.php?';
     let p54email = 'derik@landsea-shipping.co.za';
-    let params = `address=${p54email}&time=${time}&date=${date}&driver_name=${name}&driver_car=${car}&plate=${plate}&deliveryId=${deliveryId}&parentKey=${parentKey}`;
+    let params = `address=${email}&time=${time}&date=${date}&driver_name=${name}&driver_car=${car}&plate=${plate}&deliveryId=${deliveryId}&parentKey=${parentKey}`;
     xhr.open('GET', `${url}${params}`, true);
     xhr.responseType = 'json';
     xhr.onreadystatechange = () => {
@@ -119,6 +131,20 @@ export default class VerifyPin extends React.Component {
       }
     };
     xhr.send();
+  }
+
+  sendSMS(cellphone) {
+    var body =
+      'Zipi: A delivery agent is on their way to pick up your cargo: Track: https://developer.zipi.co.za/map/zipiliteMap.php To verify your driver, click ' +
+      'https://developer.zipi.co.za/verifyPin.php?key=' +
+      this.state.pack.parentKey;
+    var sms = `https://us-central1-zipi-app.cloudfunctions.net/sendSms?cellphone=${cellphone.replace(
+      '0',
+      '27',
+    )}&message=${body}`;
+    axios.get(sms).then(data => {
+      console.log('sent 2');
+    });
   }
 
   render() {

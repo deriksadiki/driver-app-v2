@@ -31,19 +31,19 @@ export default class App extends React.Component {
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     );
     if (!permStatus) {
-      Alert.alert(
-        '',
-        'This app collects location data to enable Zipi to send you accurate requests and let users track your deliveries in real-time, even when the app is closed or not in use.',
-        [
-          {
-            text: 'Ok',
-            onPress: () => {
+      // Alert.alert(
+      //   '',
+      //   'This app collects location data to enable Zipi to send you accurate requests and let users track your deliveries in real-time, even when the app is closed or not in use.',
+      //   [
+      //     {
+      //       text: 'Ok',
+      //       onPress: () => {
               this.getLocationPermission();
-            },
-          },
-        ],
-        {cancelable: false},
-      );
+      //       },
+      //     },
+      //   ],
+      //   {cancelable: false},
+      // );
     } else {
       console.log('got permission');
     }
@@ -63,20 +63,20 @@ export default class App extends React.Component {
       },
     );
 
-    // if (backgroundgranted === PermissionsAndroid.RESULTS.GRANTED) {
-    //   await PermissionsAndroid.request(
-    //     PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-    //     {
-    //       title: 'Background Location Permission',
-    //       message:
-    //         'We need access to your location ' +
-    //         'so you can get live quality updates.',
-    //       buttonNeutral: 'Ask Me Later',
-    //       buttonNegative: 'Cancel',
-    //       buttonPositive: 'OK',
-    //     },
-    //   );
-    // }
+    if (backgroundgranted === PermissionsAndroid.RESULTS.GRANTED) {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+        {
+          title: 'Background Location Permission',
+          message:
+            'We need access to your location ' +
+            'so you can get live quality updates.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+    }
   }
 
   suscribeAuth() {
