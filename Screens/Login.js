@@ -20,7 +20,7 @@ export default class Login extends React.Component{
   login(){
     if (this.state.password !== '' && this.state.email !== ''){
       this.LoadingModal.showModal();
-      auth().signInWithEmailAndPassword(this.state.email,this.state.password).then(() =>{
+      auth().signInWithEmailAndPassword(this.state.email,this.state.password).then(() => {
         console.log('welcom back');
       }).catch(error =>{
         Alert.alert('', error.message)
