@@ -51,7 +51,7 @@ export default class VerifyPin extends React.Component {
   }
 
   openMap() {
-    Linking.openURL(`google.navigation:q=${this.state.destinationCoords}`);
+    Linking.openURL(`google.navigation:q=${this.state.destinationCoords.lat},${ this.state.destinationCoords.lng}`);
   }
 
   checkVerification() {
