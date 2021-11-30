@@ -4,6 +4,7 @@ import {View, Text, StatusBar, Linking, BackHandler} from 'react-native';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import axios from 'axios';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class VerifyPin extends React.Component {
   constructor() {
@@ -149,50 +150,31 @@ export default class VerifyPin extends React.Component {
 
   render() {
     return (
-      <View style={Style.body}>
-        <StatusBar backgroundColor="black" />
-        <View style={Style.pinMainBody}>
-          <Text
-            style={{
-              fontSize: 17,
-              fontWeight: '900',
-              marginBottom: 10,
-              marginTop: 8,
-            }}>
-            Pack ID: {this.state.id}
-          </Text>
-          <Text></Text>
-          <Text>
-            Please stay safe and wear your mask. <Text></Text>
-            <Text>
-              Keep a safe social distance and don't forget to provide service
-              with a smile even if your clients can't see it.
-            </Text>
-          </Text>
-        </View>
-        <View style={Style.pinBody}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: '900',
-              marginBottom: 7,
-              marginTop: 8,
-            }}>
-            Release PIN
-          </Text>
-          <Text>
-            You need to provide this PIN to the pick-up person to receive the
-            package.
-          </Text>
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: 'bold',
-              marginTop: 10,
-              letterSpacing: 6,
-            }}>
-            {this.state.pin}
-          </Text>
+      <View style={Style.outerContainer}>
+        <StatusBar backgroundColor="#f2f2f2" barStyle="dark-content" />
+        
+        <View style={Style.inTransitContent}>
+            <View style={Style.information}>
+              <Text style={{fontWeight: "bold", fontSize: 20, textAlign: "center", marginBottom: 20}}>PACK ID: {this.state.id}</Text>
+            
+             <Text style={{fontWeight: "bold", textAlign: "center", marginBottom: 20}}>
+               Keep a safe social distance and don't forget to provide service with a smile even if your clients can't see it.
+             </Text>
+            </View>
+            <View style={Style.absoluteCard}>
+          <View style={Style.cancelBtn}>
+            <TouchableOpacity style={Style.theBtn}>
+              <Text style={{color: "red"}}>Cancel trip</Text>
+            </TouchableOpacity>
+          </View>
+              <Text style={{fontWeight: "bold", textAlign: "center", marginBottom: 20}}>Release PIN</Text>
+              <Text style={{fontStyle: "italic", textAlign: "center", marginBottom: 20}}>
+                  You need to provide this PIN to the pick-up person to receive the package.
+              </Text>
+              <Text style={{textAlign: "center", marginBottom: 20, fontSize: 20, fontWeight: "bold", letterSpacing: 5}}>
+              {this.state.pin}
+              </Text>
+            </View>
         </View>
       </View>
     );
