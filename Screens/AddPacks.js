@@ -144,19 +144,8 @@ export default class AddPacks extends React.Component{
 
   render(){
     const packs = this.state.allPacks.map((val, indx) =>{
-        return(
-          // <TouchableOpacity style={Style.card} key={indx} onPress={() =>{this.selectPack(val, indx)}}>
-          //           <View style={Style.cardContent}>
-          //             <View style={ this.state.selectedPacks.indexOf(indx) >= 0 ? Style.SelectedCircle : Style.circle}></View>
-          //           </View>
-          //           <View style={Style.cardContent2}>
-          //             <Text style={Style.nameTXT}>{val.order_id}</Text>
-          //             <Text style={Style.detailsTXT}>{val.distance} km</Text>
-          //           </View>
-          //       </TouchableOpacity>
-
-                
-            <TouchableOpacity style={{padding: 10, paddingHorizontal: 20}} key={indx} onPress={() =>{this.selectPack(val, indx)}}>
+        return(                
+          <TouchableOpacity style={{padding: 10, paddingHorizontal: 20}} key={indx} onPress={() =>{this.selectPack(val, indx)}}>
             <View style={Style.tripItem}>
               <View style={Style.dot}>
                 <View style={ this.state.selectedPacks.indexOf(indx) >= 0 ? Style.SelectedCircle : Style.circle}/>
