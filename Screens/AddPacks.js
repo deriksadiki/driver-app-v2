@@ -3,6 +3,7 @@ import Style from '../Style/Style';
 import database, { firebase } from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import { View, Text, StatusBar, TouchableOpacity, Image , ScrollView, Alert} from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
  
 let counter = 0;
 let tempArr = new Array();
@@ -144,34 +145,56 @@ export default class AddPacks extends React.Component{
   render(){
     const packs = this.state.allPacks.map((val, indx) =>{
         return(
-          <TouchableOpacity style={Style.card} key={indx} onPress={() =>{this.selectPack(val, indx)}}>
-                    <View style={Style.cardContent}>
-                      <View style={ this.state.selectedPacks.indexOf(indx) >= 0 ? Style.SelectedCircle : Style.circle}></View>
-                    </View>
-                    <View style={Style.cardContent2}>
-                      <Text style={Style.nameTXT}>{val.order_id}</Text>
-                      <Text style={Style.detailsTXT}>{val.distance} km</Text>
-                    </View>
-                </TouchableOpacity>
+          // <TouchableOpacity style={Style.card} key={indx} onPress={() =>{this.selectPack(val, indx)}}>
+          //           <View style={Style.cardContent}>
+          //             <View style={ this.state.selectedPacks.indexOf(indx) >= 0 ? Style.SelectedCircle : Style.circle}></View>
+          //           </View>
+          //           <View style={Style.cardContent2}>
+          //             <Text style={Style.nameTXT}>{val.order_id}</Text>
+          //             <Text style={Style.detailsTXT}>{val.distance} km</Text>
+          //           </View>
+          //       </TouchableOpacity>
+
+                
+            <TouchableOpacity style={{padding: 10, paddingHorizontal: 20}} key={indx} onPress={() =>{this.selectPack(val, indx)}}>
+            <View style={Style.tripItem}>
+              <View style={Style.dot}>
+                <View style={ this.state.selectedPacks.indexOf(indx) >= 0 ? Style.SelectedCircle : Style.circle}/>
+              </View>
+              <View>
+                <Text style={{fontSize: 18, fontWeight: "bold"}}>{val.order_id}</Text>
+                <Text>{val.distance} km</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
         )
       })
     return(
-      <View style={Style.body}>
-           <StatusBar backgroundColor="black" />
-       <View style={Style.addPackstext}>
-           <Text>Please ensure that all of the packages can neatly fit in your vehicle. After loading a package, click its reference to fulfill and return the packages that don't fit.</Text>
-       </View>
-        <Text style={Style.packsTxt}>Packages ({this.state.allPacks.length})</Text>
-       <View style={Style.packsBody}>
-              <ScrollView style={{marginBottom: 130}}>
-              {packs}
-              </ScrollView>
+      <View style={Style.outerContainer}>
+        <StatusBar backgroundColor="#f2f2f2" barStyle="dark-content" />
+        <View style={Style.topContent}>
+          <Text style={{paddingHorizontal: 20}}>· Please ensure that all of the packages can neatly fit in your vehicle.</Text>
+          <Text style={{paddingHorizontal: 20}}>· After loading a package, click its reference to fulfill and return the packages that don't fit.</Text>
+          <Text style={{padding: 20, paddingVertical: 10}}>Packages ({this.state.allPacks.length})</Text>
+          <ScrollView>
+            {packs}
+          </ScrollView>
         </View>
-
-        <View style={Style.bottomBtn}>
-                <TouchableOpacity style={Style.btn} onPress={()=>{this.returnPackages()}}>
-                    <Text>Start</Text>
-                </TouchableOpacity>
+        <View style={{padding: 20}}>
+          <Text style={{fontWeight: "bold", fontStyle: "italic", paddingBottom: 15, borderBottomWidth: .5, borderColor: "#707070"}}>Please take care of all packages as any damage may affect your future loads.</Text>
+          <View style={{padding: 10, backgroundColor: "white", marginVertical: 20, borderRadius: 20, alignItems: "center"}}>
+            <Text style={{fontSize: 18, fontWeight: "bold"}}>
+              PIN Approved
+            </Text>
+            <Text style={{fontStyle: "italic", marginTop: 10}}>
+              Click start when you're ready.
+            </Text>
+          </View>
+          <TouchableOpacity style={Style.startBtn} onPress={()=>{this.returnPackages()}}>
+            <View style={{padding: 10, backgroundColor: "#ffe200", alignItems: 'center', borderRadius: 100}}>
+              <Text>Start</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
       </View>

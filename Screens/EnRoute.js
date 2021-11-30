@@ -16,8 +16,11 @@ import {
 } from 'react-native';
 import Box from '../Images/box.png';
 import Call from '../Images/call.png';
-import Loc from '../Images/done.png';
+import Done from '../Images/done.png';
+import Loc from '../Images/loc.png';
+import lnkOpen from '../Images/lnk-open.png';
 import axios from 'axios';
+import Person from '../Images/person.png';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 
@@ -429,6 +432,7 @@ export default class EnRoute extends React.Component {
     });
 
     return (
+      
       <View style={Style.body}>
         <StatusBar backgroundColor="black" />
         {this.state.packages ? (
@@ -594,7 +598,7 @@ export default class EnRoute extends React.Component {
 
           <View style={Style.nextTrip}>
             <View style={Style.alignPinItems}>
-              <Image style={Style.routerImg} source={Loc} />
+              <Image style={Style.routerImg} source={Done} />
               <Text style={{fontSize: 17, marginBottom: 10, marginTop: 10}}>
                 Pin Approved
               </Text>
@@ -613,6 +617,69 @@ export default class EnRoute extends React.Component {
           </View>
         </Modal>
       </View>
+
+
+
+
+
+      // <View style={Style.outerContainer}>
+      //   <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
+      //     <View style={Style.superWhite}>
+      //       <View style={Style.toTop}>
+      //       {this.state.packages ? (
+      //         <Text>{this.state.packages.order_id}</Text>
+      //         ) : (
+      //           <View></View>
+      //         )}
+      //       </View>
+      //       <View style={Style.toBottom}>
+      //         <Text>Current Trip</Text>
+      //         <View style={Style.communicado}>
+      //           <View style={Style.aboutClient}>
+      //             <View style={Style.profile}>
+      //                 <Image style={Style.profile} source={Person} />
+      //             </View>
+      //             {this.state.packages ? (
+      //             <View style={Style.profileAbout}>
+      //               <Text style={{fontWeight: "bold", fontSize: 18}}>{this.state.packages.booking_name}</Text>
+      //               <View style={Style.addressLine}>
+      //                 <Image source={Loc} />
+      //               <Text style={{flex: 1}} numberOfLines={1}>  &nbsp; 
+      //             {this.state.packages.do_location.split(',')[0] + ',' + this.state.packages.do_location.split(',')[1]}</Text>
+      //               <TouchableOpacity onPress={() => {this.openMap();}}>
+      //                 <Image style={Style.goToMap} source={lnkOpen} />
+      //                 </TouchableOpacity>
+      //               </View>
+      //             </View>
+      //             ) : (
+      //               <View></View>
+      //             )}
+      //           </View>
+      //         </View>
+      //         <View style={Style.atTheBottom}>
+      //           <TouchableOpacity onPress={() => {this.arrived();}} style={{
+      //             backgroundColor: "#ffe200",
+      //             flex: 1,
+      //             alignItems: "center",
+      //             padding: 10,
+      //             borderTopLeftRadius: 100,
+      //             borderBottomLeftRadius: 100,}}>
+      //             <Text>Arrive</Text>
+      //           </TouchableOpacity>
+      //           <TouchableOpacity onPress={() => {this.return();}}
+      //          style={{
+      //             backgroundColor: "#333333",
+      //             flex: 1,
+      //             alignItems: "center",
+      //             padding: 10,
+      //             borderTopRightRadius: 100,
+      //             borderBottomRightRadius: 100,}}>
+      //             <Text style={{color: "#ffe200"}}>Return</Text>
+      //           </TouchableOpacity>
+      //         </View>
+      //       </View>
+      //     </View>
+      // </View>
     );
   }
 }
