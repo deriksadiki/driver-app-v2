@@ -237,15 +237,12 @@ export default class EnRoute extends React.Component {
         () => {
           console.log(this.state.packages.returnPackage);
           if (!this.state.packages.returnPackage || !this.state.returnState) {
-            this.sendSMS(
-              this.state.packages.cellphone,
-              this.state.packages.pu_pin,
-            );
-            this.sendPin(
-              this.state.packages.pu_pin,
-              this.state.packages.booking_email,
-              this.state.packages.booking_name,
-            );
+            this.sendSMS(this.state.packages.cellphone, this.state.packages.pu_pin);
+            this.sendPin(this.state.packages.pu_pin, this.state.packages.booking_email, this.state.packages.booking_name);
+            if(this.state.packages.booking_email !== this.state.packages.do_email) {
+              this.sendSMS(this.state.packages.do_cell, this.state.packages.pu_pin);
+              this.sendPin(this.state.packages.pu_pin, this.state.packages.do_email, this.state.packages.do_name);
+            }
           }
         },
       );

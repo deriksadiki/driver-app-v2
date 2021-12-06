@@ -98,6 +98,10 @@ export default class VerifyPin extends React.Component {
       .once('value', data => {
         this.sendReleaseFrom(data.val().booking_email);
         this.sendSMS(data.val().cellphone);
+        if(data.val().cellphone !== data.val().pu_cell) {
+          this.sendSMS(data.val().pu_cell)
+          this.sendReleaseFrom(data.val().pu_email)
+        }
       });
     //this.sendReleaseFrom();
   }
