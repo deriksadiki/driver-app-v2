@@ -328,65 +328,6 @@ export default class Home extends React.Component {
       );
     });
     return (
-      // <View style={Style.body}>
-      //   <StatusBar backgroundColor="black" />
-
-      //   <View style={Style.header}>
-      //     {this.state.driverObject !== null ?
-      //       <View>
-      //         <View style={Style.imageAlign}>
-      //           <Image style={Style.image} source={{ uri: this.state.driverObject.img }} />
-      //         </View>
-      //         <View style={Style.headerText}>
-      //           <Text style={Style.nameTXT}>{this.state.driverObject.firstName} {this.state.driverObject.surname}</Text>
-      //           <Text style={Style.detailsTXT}>{this.state.driverObject.totalTrips} Trips</Text>
-      //           <Text style={Style.detailsTXT}>v1.0.6</Text>
-      //           <Switch
-      //             style={{ width: 40 }}
-      //             trackColor={{ false: "#767577", true: "#81b0ff" }}
-      //             thumbColor={this.state.isEnabled ? "#f5dd4b" : "#f4f3f4"}
-      //             ios_backgroundColor="#3e3e3e"
-      //             onValueChange={() => { this.changeStatus() }}
-      //             value={this.state.isEnabled}
-      //           />
-      //           <View style={Style.statusText}>
-      //             <Text style={Style.detailsTXT}>{this.state.text}</Text>
-      //           </View>
-      //         </View>
-      //       </View>
-      //       :
-      //       <View></View>
-      //     }
-      //   </View>
-      //   {this.state.isEnabled ?
-      //     <View>
-      //       <View style={Style.heading}>
-      //         <Text style={Style.nameTXT}>Requests</Text>
-      //         <Text></Text>
-      //       </View>
-      //       {this.state.reqArray.length > 0 ?
-      //         <View>
-      //           <ScrollView style={{ marginBottom: 120 }}>
-      //             {requests}
-      //           </ScrollView>
-      //         </View>
-      //         :
-      //         <View style={{ alignContentL: 'center', alignItems: 'center', marginTop: '60%' }}>
-      //           <Text>There are no available requests at the moment</Text>
-      //         </View>
-      //       }
-      //     </View>
-      //     :
-      //     <View>
-      //       <View style={{ alignContentL: 'center', alignItems: 'center', marginTop: '60%' }}>
-      //         <Text>You will not be able to receive requests when you have disabled
-      //           connection to our servers. To receive request, toggle the online switch or click "Reconnect"</Text>
-      //       </View>
-      //     </View>
-      //   }
-
-      // </View>
-
       <View style={Style.outerContainer}>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
         <View style={Style.topNav}>
