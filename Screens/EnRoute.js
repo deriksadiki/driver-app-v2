@@ -19,6 +19,7 @@ import Call from '../Images/call.png';
 import Done from '../Images/done.png';
 import Loc from '../Images/loc.png';
 import lnkOpen from '../Images/lnk-open.png';
+import PhoneIcon from '../Images/call.png';
 import axios from 'axios';
 import Person from '../Images/person.png';
 import auth from '@react-native-firebase/auth';
@@ -129,7 +130,7 @@ export default class EnRoute extends React.Component {
         }
       }
     } else {
-      Alert.alert('', 'The Pin you have entered is incorrect!');
+      Alert.alert('', 'The PIN you have entered is incorrect!');
     }
   }
 
@@ -193,6 +194,12 @@ export default class EnRoute extends React.Component {
   arrived() {
     VIForegroundService.stopService();
     this.setState({verifyPinModal: true});
+  }
+
+  dismissModal() {
+    VIForegroundService.stopService();
+    this.setState({verifyPinModal: false});
+
   }
 
   openMap() {
@@ -418,268 +425,179 @@ export default class EnRoute extends React.Component {
 
   render() {
     const packs = this.state.allPackages.map((val, indx) => {
-      return (
-        <TouchableOpacity disabled={true} style={Style.card} key={indx}>
-          <View style={Style.cardContent}>
-            <Image style={Style.boxImg} source={Box} />
-          </View>
-          <View style={Style.cardContent2}>
-            <Text style={Style.nameTXT}>{val.order_id}</Text>
-            <Text style={Style.detailsTXT}>{val.distance} km</Text>
+      return (        
+        <TouchableOpacity style={{paddingHorizontal: 20, paddingVertical: 5}} key={indx} disabled={true} key={indx}>
+          <View style={Style.tripItem}>
+            <View>
+              <Image source={Box} />
+            </View>
+            <View style={Style.itemContent}>
+              <Text style={{fontWeight: 'bold', fontSize: 16}}>{val.order_id}</Text>
+              <Text>{val.distance} km</Text>
+            </View>
           </View>
         </TouchableOpacity>
       );
     });
 
     return (
-      
-      <View style={Style.body}>
-        <StatusBar backgroundColor="black" />
-        {this.state.packages ? (
-          <View style={Style.routeTxt}>
-            <Text style={{fontSize: 20}}>{this.state.packages.order_id}</Text>
-          </View>
-        ) : (
-          <View></View>
-        )}
-
-        <View style={Style.packsBody2}>
-          <ScrollView style={{marginBottom: 30}}>{packs}</ScrollView>
-        </View>
-        {this.state.packages ? (
-          <View style={Style.alignRoute}>
-            <View style={{marginBottom: 15}}>
-              <Text>Current Trip (1/{this.state.totTrips})</Text>
+      <View style={Style.outerContainer}>
+        <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
+          <View style={Style.superWhite}>
+            <View style={Style.toTop}>
+            {this.state.packages ? (
+              <Text>{this.state.packages.order_id}</Text>
+              ) : (
+                <View></View>
+              )}
             </View>
-            <View style={Style.routeCard}>
-              <View style={Style.routeCardContent}>
-                <Image style={Style.routerImg} source={Box} />
-              </View>
-              <View style={Style.routeCardContent2}>
-                <Text style={Style.nameTXT}>
-                  {this.state.packages.booking_name}
-                </Text>
-                <Text style={Style.detailsTXT}>
-                  REF: {this.state.packages.booking_ref}
-                </Text>
-                <Text style={Style.detailsTXT}>
-                  {this.state.packages.do_location.split(',')[0] +
-                    ',' +
-                    this.state.packages.do_location.split(',')[1]}
-                </Text>
-              </View>
+            <View style={Style.toBottom}>
+              <Text style={{marginVertical: 10}}>Current Trip (1/{this.state.totTrips})</Text>
+                  {this.state.packages ? (
+              <View style={Style.communicado}>
+                <View style={Style.aboutClient}>
+                  <View style={Style.profile}>
+                      <Image style={Style.profile} source={Person} />
+                  </View>
+                  <View style={Style.profileAbout}>
+                    <Text style={{fontWeight: "bold", fontSize: 18}}>{this.state.packages.booking_name}</Text>
+                    <View style={Style.addressLine}>
+                      <Image source={Loc} />
+                    <Text style={{flex: 1}} numberOfLines={1}>  &nbsp; 
+                  {this.state.packages.do_location.split(',')[0] + ',' + this.state.packages.do_location.split(',')[1]}</Text>
+                    <TouchableOpacity onPress={() => {this.openMap();}}>
+                      <Image style={Style.goToMap} source={lnkOpen} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+                  <Text style={{marginTop: 10}}>Message/ Special Instructions/ Packages</Text>
+                <View style={Style.specialInstructions}>
+                  <TouchableOpacity style={Style.instructions}
+                  onPress={() => {
+                    this.setState({showModal: true});
+                  }}>
+                    {this.state.packages.instructions ? (
 
-              <View style={Style.alignRoute}>
-                <Text></Text>
-                <Text style={{fontSize: 11}}>
-                  Message/ Special Instructions/ Packages
-                </Text>
-                <View style={Style.routerText}>
-                  <TouchableOpacity
-                    style={Style.txtBorder}
-                    onPress={() => {
-                      this.setState({showModal: true});
-                    }}>
-                    <Text>{this.state.packages.instructions}</Text>
+                    
+                    <Text style={Style.chatter} numberOfLines={1}>{this.state.packages.instructions} </Text>
+                    
+              ) : (
+                <Text style={Style.noChat}> </Text>
+              )}
                   </TouchableOpacity>
+                  <TouchableOpacity style={Style.callButton} 
+                  onPress={() => {
+                    Linking.openURL(`tel:${this.state.packages.cellphone}`);
+                  }}>
 
-                  <TouchableOpacity
-                    style={Style.callbtn}
-                    onPress={() => {
-                      Linking.openURL(`tel:${this.state.packages.cellphone}`);
-                    }}>
-                    <Image style={Style.routerImg2} source={Call} />
+                  <Image source={PhoneIcon} /> 
                   </TouchableOpacity>
                 </View>
               </View>
+                  ) : (
+                    <View></View>
+                  )}
+              <View style={Style.atTheBottom}>
+                <TouchableOpacity onPress={() => {this.arrived();}} style={{
+                  backgroundColor: "#ffe200",
+                  flex: 1,
+                  alignItems: "center",
+                  padding: 10,
+                  borderTopLeftRadius: 100,
+                  borderBottomLeftRadius: 100,}}>
+                  <Text>Arrive</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {this.return();}}
+               style={{
+                  backgroundColor: "#333333",
+                  flex: 1,
+                  alignItems: "center",
+                  padding: 10,
+                  borderTopRightRadius: 100,
+                  borderBottomRightRadius: 100,}}>
+                  <Text style={{color: "#ffe200"}}>Return</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        ) : (
-          <View></View>
-        )}
-
-        <View style={Style.bottomBtn}>
-          <TouchableOpacity
-            style={Style.arriveBtn}
-            onPress={() => {
-              this.arrived();
-            }}>
-            <Text>Arrived</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={Style.returnBtn}
-            onPress={() => {
-              this.return();
-            }}>
-            <Text style={{color: '#ffe200'}}>Return</Text>
-          </TouchableOpacity>
-        </View>
-
+          {/* this.state.showModal */}
         <Modal visible={this.state.showModal} animationType="slide">
-          {this.state.packages ? (
-            <View style={Style.body}>
-              <View style={Style.routeTxt}>
-                <TouchableOpacity
-                  style={Style.backBtn}
-                  onPress={() => {
+            <View style={Style.outerContainer}>
+              {this.state.packages ? (
+              <View style={Style.navBar}>
+                <TouchableOpacity style={Style.bckBtn} onPress={() => {
                     this.setState({showModal: false});
                   }}>
                   <Text>Back</Text>
                 </TouchableOpacity>
-                <Text style={{fontSize: 20}}>
-                  {this.state.packages.booking_name}
-                </Text>
+                <View style={Style.personName}>
+                  <Text style={{fontWeight: 'bold'}}>{this.state.packages.booking_name}</Text>
+                </View>
               </View>
-              <Text style={{textAlign: 'center', marginTop: 20}}>
-                Special Instructions
-              </Text>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  marginTop: 20,
-                  width: '97%',
-                  marginLeft: 5,
-                }}>
-                {this.state.packages.instructions}
-              </Text>
+              ) : (
+                <View></View>
+              )}
+              <View style={Style.theInstructions}>
+                  <Text style={{
+                    textAlign: 'center',
+                    margin: 20,
+                    }}>Special instructions
+                  </Text>
+                  {this.state.packages ? (
+                  <View style={Style.textChat}>
+                  <Text>
+                  {this.state.packages.instructions}
+                  </Text>
+                </View>) : (
+                <View></View>
+                )}
+              </View>
             </View>
-          ) : (
-            <View></View>
-          )}
         </Modal>
-
-        <Modal visible={this.state.verifyPinModal} animationType="slide">
-          <View style={Style.body}>
+        <Modal visible={this.state.verifyPinModal} animationType="slide" transparent>
+        <StatusBar backgroundColor="#7f7f7f" barStyle="light-content" />
+          <View style={Style.outerContainer1}>
+            <TouchableOpacity onPress={() => {
+                  this.dismissModal();
+                }}
+                style={{flex: 1,}}>
+            </TouchableOpacity>
             {this.state.packages ? (
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignContent: 'center',
-                  alignItems: 'center',
-                  marginTop: '50%',
-                  width: '90%',
-                  marginLeft: '5%',
-                }}>
-                <Text>
-                  Ask {this.state.packages.booking_name} for the PIN before you
-                  can hand them the package.
-                </Text>
-                <Text></Text>
-                <Text>REF: {this.state.packages.order_id}</Text>
-                <Text></Text>
-                <TextInput
-                  keyboardType="number-pad"
-                  textAlign={'center'}
-                  value={this.state.pin}
-                  onChangeText={txt => {
-                    this.setState({pin: txt});
-                  }}
-                  style={Style.input}
-                  placeholder="Pin"
-                />
+              <View style={Style.daBottom}>
+              <Text style={{margin: 10, textAlign: 'center', fontWeight: 'bold'}}>REF: {this.state.packages.order_id}</Text>
+                <Text style={{margin: 10, textAlign: 'center'}}>Ask {this.state.packages.booking_name} for the PIN before you can hand them the package.</Text>
+                <TextInput keyboardType="number-pad" textAlign={'center'} value={this.state.pin} onChangeText={txt => {this.setState({pin: txt});}} style={Style.textInput} placeholder="Verify PIN"/>
+                <TouchableOpacity style={Style.btnVerify} onPress={() => { this.verifyPin(); }}>
+                  <Text style={{ fontWeight: 'bold' }}>Confirm PIN</Text>
+                </TouchableOpacity>
               </View>
             ) : (
               <View></View>
             )}
-            <View style={Style.bottomBtn}>
-              <TouchableOpacity
-                style={Style.btn}
-                onPress={() => {
-                  this.verifyPin();
-                }}>
-                <Text>Verify Pin</Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </Modal>
-
         <Modal transparent visible={this.state.nextTrip} animationType="slide">
-          <View style={Style.tripNext} />
-
-          <View style={Style.nextTrip}>
-            <View style={Style.alignPinItems}>
-              <Image style={Style.routerImg} source={Done} />
-              <Text style={{fontSize: 17, marginBottom: 10, marginTop: 10}}>
+        <StatusBar backgroundColor="#7f7f7f" barStyle="light-content" />
+          <View style={Style.outerContainer1}>
+            <View style={Style.verifiedTrip}>
+            <Image source={Done} style={Style.checkMark}/>
+              <Text style={{textAlign: 'center', marginVertical: 10}}>
                 Pin Approved
               </Text>
-              <Text>Click "Next trip" when you're ready for the next trip</Text>
-            </View>
+              <Text style={{textAlign: 'center'}}>Click "Next trip" when you're ready for the next trip</Text>
 
-            <View style={Style.bottomBtn}>
-              <TouchableOpacity
-                style={Style.btn}
-                onPress={() => {
+              <TouchableOpacity style={Style.btnVerify} onPress={() => {
                   this.startTrip();
                 }}>
-                <Text>Next Trip</Text>
+                <Text>
+                  Next trip
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
         </Modal>
       </View>
-
-
-
-
-
-      // <View style={Style.outerContainer}>
-      //   <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
-      //     <View style={Style.superWhite}>
-      //       <View style={Style.toTop}>
-      //       {this.state.packages ? (
-      //         <Text>{this.state.packages.order_id}</Text>
-      //         ) : (
-      //           <View></View>
-      //         )}
-      //       </View>
-      //       <View style={Style.toBottom}>
-      //         <Text>Current Trip</Text>
-      //         <View style={Style.communicado}>
-      //           <View style={Style.aboutClient}>
-      //             <View style={Style.profile}>
-      //                 <Image style={Style.profile} source={Person} />
-      //             </View>
-      //             {this.state.packages ? (
-      //             <View style={Style.profileAbout}>
-      //               <Text style={{fontWeight: "bold", fontSize: 18}}>{this.state.packages.booking_name}</Text>
-      //               <View style={Style.addressLine}>
-      //                 <Image source={Loc} />
-      //               <Text style={{flex: 1}} numberOfLines={1}>  &nbsp; 
-      //             {this.state.packages.do_location.split(',')[0] + ',' + this.state.packages.do_location.split(',')[1]}</Text>
-      //               <TouchableOpacity onPress={() => {this.openMap();}}>
-      //                 <Image style={Style.goToMap} source={lnkOpen} />
-      //                 </TouchableOpacity>
-      //               </View>
-      //             </View>
-      //             ) : (
-      //               <View></View>
-      //             )}
-      //           </View>
-      //         </View>
-      //         <View style={Style.atTheBottom}>
-      //           <TouchableOpacity onPress={() => {this.arrived();}} style={{
-      //             backgroundColor: "#ffe200",
-      //             flex: 1,
-      //             alignItems: "center",
-      //             padding: 10,
-      //             borderTopLeftRadius: 100,
-      //             borderBottomLeftRadius: 100,}}>
-      //             <Text>Arrive</Text>
-      //           </TouchableOpacity>
-      //           <TouchableOpacity onPress={() => {this.return();}}
-      //          style={{
-      //             backgroundColor: "#333333",
-      //             flex: 1,
-      //             alignItems: "center",
-      //             padding: 10,
-      //             borderTopRightRadius: 100,
-      //             borderBottomRightRadius: 100,}}>
-      //             <Text style={{color: "#ffe200"}}>Return</Text>
-      //           </TouchableOpacity>
-      //         </View>
-      //       </View>
-      //     </View>
-      // </View>
     );
   }
 }
