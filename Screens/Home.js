@@ -96,7 +96,12 @@ export default class Home extends React.Component {
           btnState = true;
         }
         this.setState(
-          {driverObject: data.val(), availability: temp, isEnabled: btnState, text: btnState === true ? 'Online' : 'Offline' },
+          {
+            driverObject: data.val(),
+            availability: temp,
+            isEnabled: btnState,
+            text: btnState === true ? 'Online' : 'Offline',
+          },
           () => this.getTocken(),
         );
       });
@@ -353,7 +358,16 @@ export default class Home extends React.Component {
                     <Text>v1.0.6</Text>
                   </View>
                   <View style={Style.flexThis}>
-                    <Switch style={{width: 40}} trackColor={{false: '#767577', true: '#81b0ff'}} thumbColor={this.state.isEnabled ? '#f5dd4b' : '#f4f3f4'} ios_backgroundColor="#3e3e3e" onValueChange={() => {this.changeStatus();}} value={this.state.isEnabled}/>
+                    <Switch
+                      style={{width: 40}}
+                      trackColor={{false: '#767577', true: '#81b0ff'}}
+                      thumbColor={this.state.isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                      ios_backgroundColor="#3e3e3e"
+                      onValueChange={() => {
+                        this.changeStatus();
+                      }}
+                      value={this.state.isEnabled}
+                    />
                     <Text style={Style.onlineStatus}>{this.state.text}</Text>
                   </View>
                 </View>
@@ -371,27 +385,30 @@ export default class Home extends React.Component {
             )}
           </View>
         </View>
-        {this.state.isEnabled ?
+        {this.state.isEnabled ? (
           <View style={Style.scrollContent}>
-            
             {this.state.reqArray.length > 0 ? (
               <View>
                 <Text style={{marginLeft: 20, marginBottom: 5}}>Requests</Text>
-                <ScrollView style={{paddingBottom: 10}}>
-                  {requests}
-                </ScrollView>
+                <ScrollView style={{paddingBottom: 10}}>{requests}</ScrollView>
               </View>
             ) : (
               <View style={Style.emptyStuff}>
-                <Text style={{textAlign: "center"}}>There are no available requests at the moment. Check back again soon for any further updates.</Text>
+                <Text style={{textAlign: 'center'}}>
+                  There are no available requests at the moment. Check back
+                  again soon for any further updates.
+                </Text>
               </View>
             )}
           </View>
-        :
-        <View style={Style.emptyStuff}>
-          <Text style={{textAlign: "center"}}>You won't be able to receive request updates if you're offline. Toggle the online switch to view current delivery requests.</Text>
-        </View>
-        }
+        ) : (
+          <View style={Style.emptyStuff}>
+            <Text style={{textAlign: 'center'}}>
+              You won't be able to receive request updates if you're offline.
+              Toggle the online switch to view current delivery requests.
+            </Text>
+          </View>
+        )}
       </View>
     );
   }
