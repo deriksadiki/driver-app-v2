@@ -27,7 +27,7 @@ export default class Home extends React.Component {
       current_coords: null,
       driverObject: null,
       phoneId: '',
-      availability: null,
+      availability: 'unavailable',
       isEnabled: null,
     };
   }
@@ -41,7 +41,7 @@ export default class Home extends React.Component {
     } else {
       this.setState(
         {availability: 'unavailable', text: 'Offline', isEnabled: false},
-        this.setDriverStatus('unavailable'),
+        () => this.setDriverStatus('unavailable'),
       );
     }
   }
@@ -71,6 +71,7 @@ export default class Home extends React.Component {
   componentDidMount() {
     this.getDriverDetails();
     this.trackDriver();
+    this.setDriverStatus('unavailable');
   }
 
   getRandomInt(max) {
@@ -95,7 +96,7 @@ export default class Home extends React.Component {
           btnState = true;
         }
         this.setState(
-          {driverObject: data.val(), availability: temp, isEnabled: btnState},
+          {driverObject: data.val(), availability: temp, isEnabled: btnState, text: btnState === true ? 'Online' : 'Offline' },
           () => this.getTocken(),
         );
       });
